@@ -2183,9 +2183,9 @@ export class UIRenderer {
         };
 
         recents.albums?.slice(0, 2).forEach((item) => pushCandidate('album', item));
-        recents.playlists?.slice(0, 2).forEach((item) =>
-            pushCandidate(item.isUserPlaylist ? 'user-playlist' : 'playlist', item)
-        );
+        recents.playlists
+            ?.slice(0, 2)
+            .forEach((item) => pushCandidate(item.isUserPlaylist ? 'user-playlist' : 'playlist', item));
         recents.mixes?.slice(0, 1).forEach((item) => pushCandidate('mix', item));
         playlists.slice(0, 2).forEach((item) => pushCandidate('user-playlist', item));
         likedAlbums.slice(0, 2).forEach((item) => pushCandidate('album', item));
@@ -2198,7 +2198,9 @@ export class UIRenderer {
         if (displayItems.length === 0) {
             container.innerHTML = createPlaceholder('Search, like, or build a playlist to unlock quick picks.');
         } else {
-            container.innerHTML = displayItems.map(({ item, kind }) => this.createQuickPickCardHTML(item, kind)).join('');
+            container.innerHTML = displayItems
+                .map(({ item, kind }) => this.createQuickPickCardHTML(item, kind))
+                .join('');
 
             displayItems.forEach(({ item, kind }) => {
                 let selector = '';
@@ -3524,8 +3526,7 @@ export class UIRenderer {
             const totalDuration = calculateTotalDuration(tracks);
             const releaseYear = this.formatDetailDate(album.releaseDate, 'year');
             const releaseFullDate = this.formatDetailDate(album.releaseDate, 'long');
-            const releaseType =
-                album.type === 'EP' ? 'EP' : album.type === 'SINGLE' ? 'Single' : album.type || 'Album';
+            const releaseType = album.type === 'EP' ? 'EP' : album.type === 'SINGLE' ? 'Single' : album.type || 'Album';
 
             const firstCopyright = tracks.find((track) => track.copyright)?.copyright;
 
@@ -3936,7 +3937,9 @@ export class UIRenderer {
                         ? 'Public playlist'
                         : 'Community playlist'
                     : 'Private playlist';
-                const ownerLabel = ownedPlaylist ? 'By you' : `By ${escapeHtml(playlistData.user?.name || 'Community')}`;
+                const ownerLabel = ownedPlaylist
+                    ? 'By you'
+                    : `By ${escapeHtml(playlistData.user?.name || 'Community')}`;
 
                 this.setDetailLine(summaryEl, this.createDetailSummaryHTML([ownerLabel, visibilityLabel]));
                 this.setDetailLine(
@@ -4356,7 +4359,10 @@ export class UIRenderer {
             const totalDuration = calculateTotalDuration(tracks);
             this.setDetailLine(
                 summaryEl,
-                this.createDetailSummaryHTML(['Personalized mix', mix.subTitle ? escapeHtml(mix.subTitle) : 'Fresh picks'])
+                this.createDetailSummaryHTML([
+                    'Personalized mix',
+                    mix.subTitle ? escapeHtml(mix.subTitle) : 'Fresh picks',
+                ])
             );
             this.setDetailLine(
                 metaEl,
@@ -4678,14 +4684,13 @@ export class UIRenderer {
                 this.createDetailSummaryHTML([
                     `${popularTracksCount} popular track${popularTracksCount === 1 ? '' : 's'}`,
                     totalReleases ? `${totalReleases} release${totalReleases === 1 ? '' : 's'}` : '',
-                    artist.videos?.length ? `${artist.videos.length} video${artist.videos.length === 1 ? '' : 's'}` : '',
+                    artist.videos?.length
+                        ? `${artist.videos.length} video${artist.videos.length === 1 ? '' : 's'}`
+                        : '',
                 ])
             );
 
-            this.setDetailLine(
-                metaEl,
-                this.createDetailFactsHTML([`${artist.popularity}% popularity`, ...roleLabels])
-            );
+            this.setDetailLine(metaEl, this.createDetailFactsHTML([`${artist.popularity}% popularity`, ...roleLabels]));
 
             if (verifiedEl) {
                 const isFeatured = (artist.popularity || 0) >= 65 || roleLabels.length > 0;

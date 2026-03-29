@@ -1934,9 +1934,7 @@
                         </p>
                     </div>
                     <div class="library-chip-row" id="library-chip-row">
-                        <button type="button" class="library-chip active" data-library-tab="tracks">
-                            Liked Songs
-                        </button>
+                        <button type="button" class="library-chip active" data-library-tab="tracks">Liked Songs</button>
                         <button type="button" class="library-chip" data-library-tab="albums">Albums</button>
                         <button type="button" class="library-chip" data-library-tab="artists">Artists</button>
                         <button type="button" class="library-chip" data-library-tab="playlists">Playlists</button>
@@ -2094,41 +2092,41 @@
                                     <span style="display: flex; justify-content: flex-end; opacity: 0.8">Menu</span>
                                 </div>
                                 <div class="track-list" id="library-local-container">
-                                <div id="local-files-intro" style="padding: 20px; text-align: center">
-                                    <button id="select-local-folder-btn" class="btn-secondary">
-                                        <use svg="!lucide/folder.svg" size="20" />
-                                        <span id="select-local-folder-text">Select Music Folder</span>
-                                    </button>
-                                    <p
-                                        id="local-browser-warning"
-                                        style="display: none; color: #ef4444; margin-top: 10px; font-size: 0.9rem"
+                                    <div id="local-files-intro" style="padding: 20px; text-align: center">
+                                        <button id="select-local-folder-btn" class="btn-secondary">
+                                            <use svg="!lucide/folder.svg" size="20" />
+                                            <span id="select-local-folder-text">Select Music Folder</span>
+                                        </button>
+                                        <p
+                                            id="local-browser-warning"
+                                            style="display: none; color: #ef4444; margin-top: 10px; font-size: 0.9rem"
+                                        >
+                                            Please use Google Chrome or Microsoft Edge to play local files.
+                                        </p>
+                                        <p style="margin-top: 10px; font-size: 0.9rem; color: var(--muted-foreground)">
+                                            Select a folder on your device to play local files. <br />
+                                            Note: Metadata reading is basic (FLAC/MP3 tags).
+                                        </p>
+                                    </div>
+                                    <div
+                                        id="local-files-header"
+                                        style="
+                                            display: none;
+                                            justify-content: space-between;
+                                            align-items: center;
+                                            padding: 10px 20px;
+                                        "
                                     >
-                                        Please use Google Chrome or Microsoft Edge to play local files.
-                                    </p>
-                                    <p style="margin-top: 10px; font-size: 0.9rem; color: var(--muted-foreground)">
-                                        Select a folder on your device to play local files. <br />
-                                        Note: Metadata reading is basic (FLAC/MP3 tags).
-                                    </p>
-                                </div>
-                                <div
-                                    id="local-files-header"
-                                    style="
-                                        display: none;
-                                        justify-content: space-between;
-                                        align-items: center;
-                                        padding: 10px 20px;
-                                    "
-                                >
-                                    <h3>Local Files</h3>
-                                    <button
-                                        id="change-local-folder-btn"
-                                        class="btn-secondary"
-                                        style="font-size: 0.8rem; padding: 4px 8px"
-                                    >
-                                        Change Folder
-                                    </button>
-                                </div>
-                                <div id="local-files-list"></div>
+                                        <h3>Local Files</h3>
+                                        <button
+                                            id="change-local-folder-btn"
+                                            class="btn-secondary"
+                                            style="font-size: 0.8rem; padding: 4px 8px"
+                                        >
+                                            Change Folder
+                                        </button>
+                                    </div>
+                                    <div id="local-files-list"></div>
                                 </div>
                             </div>
                         </div>
