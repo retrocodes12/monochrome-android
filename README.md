@@ -114,6 +114,23 @@ Our Recommended way to use monochrome is through our official instance:
 
 For alternative instances, check [INSTANCES.md](INSTANCES.md).
 
+### Android Build
+
+This repo includes a Capacitor Android wrapper for the web app.
+
+```bash
+npm install
+npm run android:debug
+```
+
+Release artifacts can be generated with:
+
+```bash
+npm run android:release
+```
+
+The Gradle project lives in [`android/`](android) and expects a working Android SDK installation.
+
 ---
 
 ## Self-Hosting

@@ -2569,6 +2569,71 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    document.getElementById('home-hero-search-btn')?.addEventListener('click', () => {
+        searchInput.focus();
+        searchInput.select();
+    });
+
+    const homeMadeForYouBtn = document.getElementById('home-filter-made-for-you-btn');
+    const homeForYouTab = document.querySelector('.home-tab[data-tab="for-you"]');
+    const homeExploreTab = document.querySelector('.home-tab[data-tab="explore"]');
+    const homeContentEl = document.getElementById('home-content');
+
+    homeMadeForYouBtn?.addEventListener('click', () => {
+        homeForYouTab?.click();
+        homeMadeForYouBtn.classList.add('active');
+        homeContentEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        window.setTimeout(() => {
+            homeMadeForYouBtn.classList.remove('active');
+        }, 1400);
+    });
+
+    homeForYouTab?.addEventListener('click', () => {
+        homeMadeForYouBtn?.classList.remove('active');
+    });
+
+    homeExploreTab?.addEventListener('click', () => {
+        homeMadeForYouBtn?.classList.remove('active');
+    });
+
+    const libraryPageEl = document.getElementById('page-library');
+    const libraryChips = Array.from(document.querySelectorAll('#library-chip-row .library-chip'));
+
+    if (libraryPageEl && libraryChips.length > 0) {
+        const syncLibraryChips = () => {
+            const activeTab = libraryPageEl.querySelector('.search-tab.active')?.dataset.tab;
+            libraryChips.forEach((chip) => {
+                chip.classList.toggle('active', chip.dataset.libraryTab === activeTab);
+            });
+        };
+
+        libraryChips.forEach((chip) => {
+            chip.addEventListener('click', () => {
+                const tab = libraryPageEl.querySelector(`.search-tab[data-tab="${chip.dataset.libraryTab}"]`);
+                tab?.click();
+                syncLibraryChips();
+            });
+        });
+
+        libraryPageEl.querySelectorAll('.search-tab').forEach((tab) => {
+            tab.addEventListener('click', syncLibraryChips);
+        });
+
+        syncLibraryChips();
+    }
+
+    const mainContentEl = document.querySelector('.main-content');
+    const mainHeaderEl = document.querySelector('.main-header');
+
+    if (mainContentEl && mainHeaderEl) {
+        const syncHeaderState = () => {
+            mainHeaderEl.classList.toggle('scrolled', mainContentEl.scrollTop > 48);
+        };
+
+        mainContentEl.addEventListener('scroll', syncHeaderState, { passive: true });
+        syncHeaderState();
+    }
+
     window.addEventListener('online', () => {
         hideOfflineNotification();
         console.log('Back online');
@@ -2747,6 +2812,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const headerAccountImg = document.getElementById('header-account-img');
     const headerAccountIcon = document.getElementById('header-account-icon');
 
+    const setHeaderAccountLabel = (label = 'Account') => {
+        if (!headerAccountBtn) return;
+        headerAccountBtn.dataset.label = String(label).trim().slice(0, 18) || 'Account';
+    };
+
     // Temporarily disable accounts - show popup
     const isAccountsDisabled = false;
 
@@ -2780,6 +2850,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             headerAccountDropdown.innerHTML = '';
 
             if (!user) {
+                setHeaderAccountLabel('Account');
                 const iconBtnStyle =
                     'background:none;border:none;cursor:pointer;padding:4px;border-radius:6px;display:flex;align-items:center;transition:opacity 0.15s';
                 headerAccountDropdown.innerHTML = `
@@ -2823,6 +2894,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else {
                 const data = await syncManager.getUserData();
                 const hasProfile = data && data.profile && data.profile.username;
+                const profileLabel =
+                    data?.profile?.display_name || data?.profile?.username || user.name || user.email || 'Account';
+                setHeaderAccountLabel(profileLabel);
 
                 if (hasProfile) {
                     headerAccountDropdown.innerHTML = `
@@ -2851,6 +2925,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         authManager.onAuthStateChanged(async (user) => {
             if (user) {
                 const data = await syncManager.getUserData();
+                const profileLabel =
+                    data?.profile?.display_name || data?.profile?.username || user.name || user.email || 'Account';
+                setHeaderAccountLabel(profileLabel);
                 if (data && data.profile && data.profile.avatar_url) {
                     headerAccountImg.src = data.profile.avatar_url;
                     headerAccountImg.style.display = 'block';
@@ -2858,6 +2935,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     return;
                 }
             }
+            setHeaderAccountLabel('Account');
             headerAccountImg.style.display = 'none';
             headerAccountIcon.style.display = 'flex';
         });

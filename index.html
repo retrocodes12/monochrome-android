@@ -15,6 +15,8 @@
 
         <!-- Preconnect to critical third-party origins -->
         <link rel="preconnect" href="https://api.fonts.coollabs.io" crossorigin />
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link rel="preconnect" href="https://ws.audioscrobbler.com" crossorigin />
         <link rel="preconnect" href="https://libre.fm" crossorigin />
         <link rel="preconnect" href="https://api.listenbrainz.org" crossorigin />
@@ -26,13 +28,13 @@
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/assets/logo.svg" type="image/svg+xml" />
         <link
-            href="https://api.fonts.coollabs.io/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap"
             rel="stylesheet"
         />
         <link rel="stylesheet" href="/styles.css" />
     </head>
 
-    <body>
+    <body class="melodix-ui">
         <audio id="audio-player" crossorigin="anonymous" style="display: none"></audio>
         <video id="video-player" crossorigin="anonymous" style="display: none"></video>
         <div id="context-menu">
@@ -1578,13 +1580,32 @@
                             </li>
                         </ul>
                     </nav>
-                    <div class="sidebar-bottom-container">
+                    <div class="sidebar-bottom-container is-empty">
                         <nav class="sidebar-nav" id="pinned-items-nav" style="display: none">
-                            <h4 class="pinned-items-header">Pinned</h4>
+                            <h4 class="pinned-items-header">Your Library</h4>
                             <ul id="pinned-items-list">
                                 <!-- Pinned should be injected here -->
                             </ul>
                         </nav>
+                        <div class="sidebar-library-placeholder" id="sidebar-library-placeholder">
+                            <div class="sidebar-library-placeholder-copy">
+                                <div class="sidebar-library-placeholder-icon">
+                                    <use svg="!lucide/library.svg" size="24" />
+                                </div>
+                                <p class="sidebar-library-placeholder-eyebrow">Your Library</p>
+                                <h3>Pin your favorites</h3>
+                                <p>
+                                    Save albums, playlists, and artists here so the sidebar stays useful instead of
+                                    empty.
+                                </p>
+                            </div>
+                            <div class="sidebar-library-placeholder-actions">
+                                <a href="/library" class="sidebar-library-primary-link">Open Library</a>
+                                <a href="/recent" class="sidebar-library-secondary-link" title="Open Recent">
+                                    <use svg="./images/recent.svg" size="18" />
+                                </a>
+                            </div>
+                        </div>
                         <div class="sidebar-nav-bottom">
                             <nav class="sidebar-nav bottom">
                                 <ul>
@@ -1632,7 +1653,7 @@
                         <input
                             type="search"
                             id="search-input"
-                            placeholder="Search for tracks, artists, albums..."
+                            placeholder="What do you want to play?"
                             autocomplete="off"
                             autocorrect="off"
                             autocapitalize="off"
@@ -1653,6 +1674,7 @@
                             id="header-account-btn"
                             class="btn-icon"
                             title="Account"
+                            data-label="Account"
                             style="
                                 width: 36px;
                                 height: 36px;
@@ -1676,12 +1698,49 @@
                 </header>
 
                 <div id="page-home" class="page">
-                    <div class="home-header-tabs">
-                        <button class="home-tab active" data-tab="for-you">Home</button>
-                        <button class="home-tab" data-tab="explore">Hot & New</button>
+                    <section class="home-hero">
+                        <div class="home-hero-copy">
+                            <span class="home-hero-kicker">Home</span>
+                            <h1 class="home-hero-title" id="home-greeting-title">Good evening</h1>
+                            <p class="home-hero-description">
+                                Jump between playlists, liked songs, and recent listens from one queue-first home
+                                screen.
+                            </p>
+                            <div class="home-hero-actions">
+                                <button type="button" id="home-hero-search-btn" class="btn-primary">
+                                    Search Music
+                                </button>
+                                <a href="/library" class="btn-secondary home-hero-link">Open Your Library</a>
+                            </div>
+                        </div>
+                        <div class="home-hero-spotlight">
+                            <span class="home-hero-spotlight-label">Made for you</span>
+                            <strong id="home-hero-spotlight-title">Your collection, queued up.</strong>
+                            <p id="home-hero-spotlight-meta">
+                                Quick access updates automatically from your history, liked tracks, and playlists.
+                            </p>
+                            <div class="home-hero-spotlight-stats">
+                                <span id="home-hero-library-count">0 liked songs</span>
+                                <span id="home-hero-playlist-count">0 playlists</span>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="home-filter-row">
+                        <button class="home-tab active" data-tab="for-you">All</button>
+                        <button type="button" class="home-filter-chip" id="home-filter-made-for-you-btn">
+                            Made for you
+                        </button>
+                        <button class="home-tab" data-tab="explore">Browse</button>
                     </div>
 
                     <div id="home-view-for-you" class="home-view active">
+                        <section class="content-section home-quick-picks-section">
+                            <div class="section-header-row">
+                                <h2 class="section-title">Quick picks</h2>
+                                <a href="/library" class="section-link">Open library</a>
+                            </div>
+                            <div class="home-quick-picks" id="home-quick-picks"></div>
+                        </section>
                         <div id="home-welcome" style="display: none; text-align: center; padding: 4rem 2rem">
                             <h2 style="margin-bottom: 1rem">Welcome to Monochrome</h2>
                             <p style="color: var(--muted-foreground)">
@@ -1822,7 +1881,13 @@
                 </div>
 
                 <div id="page-search" class="page">
-                    <h2 class="section-title" id="search-results-title">Search Results</h2>
+                    <div class="page-intro">
+                        <span class="page-intro-kicker">Search</span>
+                        <h2 class="page-intro-title" id="search-results-title">Search Results</h2>
+                        <p class="page-intro-subtitle" id="search-results-meta">
+                            Find tracks, albums, artists, playlists, and podcasts from one place.
+                        </p>
+                    </div>
                     <div class="search-tabs">
                         <button class="search-tab active" data-tab="tracks">Tracks</button>
                         <button class="search-tab" data-tab="videos">Videos</button>
@@ -1832,7 +1897,16 @@
                         <button class="search-tab" data-tab="podcasts">Podcasts</button>
                     </div>
                     <div class="search-tab-content active" id="search-tab-tracks">
-                        <div class="track-list" id="search-tracks-container"></div>
+                        <div class="track-list-shell">
+                            <div class="track-list-header">
+                                <span style="width: 40px; text-align: center">#</span>
+                                <span>Title</span>
+                                <span class="track-list-header-spacer" aria-hidden="true"></span>
+                                <span class="duration-header">Duration</span>
+                                <span style="display: flex; justify-content: flex-end; opacity: 0.8">Menu</span>
+                            </div>
+                            <div class="track-list" id="search-tracks-container"></div>
+                        </div>
                     </div>
                     <div class="search-tab-content" id="search-tab-videos">
                         <div class="card-grid" id="search-videos-container"></div>
@@ -1852,6 +1926,22 @@
                 </div>
 
                 <div id="page-library" class="page">
+                    <div class="page-intro">
+                        <span class="page-intro-kicker">Collection</span>
+                        <h2 class="page-intro-title">Your Library</h2>
+                        <p class="page-intro-subtitle" id="library-summary-meta">
+                            Saved music, playlists, folders, and local files in one place.
+                        </p>
+                    </div>
+                    <div class="library-chip-row" id="library-chip-row">
+                        <button type="button" class="library-chip active" data-library-tab="tracks">
+                            Liked Songs
+                        </button>
+                        <button type="button" class="library-chip" data-library-tab="albums">Albums</button>
+                        <button type="button" class="library-chip" data-library-tab="artists">Artists</button>
+                        <button type="button" class="library-chip" data-library-tab="playlists">Playlists</button>
+                        <button type="button" class="library-chip" data-library-tab="local">Local Files</button>
+                    </div>
                     <section class="content-section">
                         <div class="library-header">
                             <h2>My Playlists</h2>
@@ -1971,7 +2061,16 @@
                                     </button>
                                 </div>
                             </div>
-                            <div class="track-list" id="library-tracks-container"></div>
+                            <div class="track-list-shell">
+                                <div class="track-list-header">
+                                    <span style="width: 40px; text-align: center">#</span>
+                                    <span>Title</span>
+                                    <span class="track-list-header-spacer" aria-hidden="true"></span>
+                                    <span class="duration-header">Duration</span>
+                                    <span style="display: flex; justify-content: flex-end; opacity: 0.8">Menu</span>
+                                </div>
+                                <div class="track-list" id="library-tracks-container"></div>
+                            </div>
                         </div>
                         <div class="search-tab-content" id="library-tab-videos">
                             <div class="card-grid" id="library-videos-container"></div>
@@ -1986,7 +2085,15 @@
                             <div class="card-grid" id="library-playlists-container"></div>
                         </div>
                         <div class="search-tab-content" id="library-tab-local">
-                            <div class="track-list" id="library-local-container">
+                            <div class="track-list-shell">
+                                <div class="track-list-header">
+                                    <span style="width: 40px; text-align: center">#</span>
+                                    <span>Title</span>
+                                    <span class="track-list-header-spacer" aria-hidden="true"></span>
+                                    <span class="duration-header">Duration</span>
+                                    <span style="display: flex; justify-content: flex-end; opacity: 0.8">Menu</span>
+                                </div>
+                                <div class="track-list" id="library-local-container">
                                 <div id="local-files-intro" style="padding: 20px; text-align: center">
                                     <button id="select-local-folder-btn" class="btn-secondary">
                                         <use svg="!lucide/folder.svg" size="20" />
@@ -2022,16 +2129,21 @@
                                     </button>
                                 </div>
                                 <div id="local-files-list"></div>
+                                </div>
                             </div>
                         </div>
                     </section>
                 </div>
 
                 <div id="page-recent" class="page">
-                    <div
-                        style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem"
-                    >
-                        <h2 class="section-title" style="margin-bottom: 0">Recently played</h2>
+                    <div class="page-intro">
+                        <span class="page-intro-kicker">History</span>
+                        <h2 class="page-intro-title">Recently Played</h2>
+                        <p class="page-intro-subtitle" id="recent-summary-meta">
+                            Your latest sessions, grouped by when you played them.
+                        </p>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: flex-end; margin-bottom: 1rem">
                         <button class="btn-secondary" id="clear-history-btn" title="Clear History">
                             <use svg="!lucide/trash-2.svg" size="16" />
                             <span>Clear</span>
@@ -2120,7 +2232,11 @@
                             class="detail-header-image"
                         />
                         <div class="detail-header-info">
+                            <div class="detail-header-topline">
+                                <div class="type">Album</div>
+                            </div>
                             <h1 class="title" id="album-detail-title"></h1>
+                            <div class="detail-header-summary" id="album-detail-summary"></div>
                             <div class="meta" id="album-detail-meta"></div>
                             <div class="meta" id="album-detail-producer"></div>
                             <div class="detail-header-actions">
@@ -2215,7 +2331,11 @@
                             <div id="playlist-detail-collage" class="detail-header-collage" style="display: none"></div>
                         </div>
                         <div class="detail-header-info">
+                            <div class="detail-header-topline">
+                                <div class="type">Playlist</div>
+                            </div>
                             <h1 class="title" id="playlist-detail-title"></h1>
+                            <div class="detail-header-summary" id="playlist-detail-summary"></div>
                             <div class="meta" id="playlist-detail-meta"></div>
                             <div class="meta" id="playlist-detail-description" class="detail-description"></div>
                             <div class="detail-header-actions">
@@ -2298,6 +2418,7 @@
                             alt="Folder Cover"
                         />
                         <div class="detail-header-info">
+                            <div class="type">Folder</div>
                             <h1 class="title" id="folder-detail-title"></h1>
                             <div class="meta" id="folder-detail-meta"></div>
                             <div class="detail-header-actions">
@@ -2317,7 +2438,11 @@
                             alt="Mix Cover"
                         />
                         <div class="detail-header-info">
+                            <div class="detail-header-topline">
+                                <div class="type">Mix</div>
+                            </div>
                             <h1 class="title" id="mix-detail-title"></h1>
+                            <div class="detail-header-summary" id="mix-detail-summary"></div>
                             <div class="meta" id="mix-detail-meta"></div>
                             <div class="meta" id="mix-detail-description" class="detail-description"></div>
                             <div class="detail-header-actions">
@@ -2355,7 +2480,14 @@
                             class="detail-header-image artist"
                         />
                         <div class="detail-header-info">
+                            <div class="detail-header-topline">
+                                <div class="type">Artist</div>
+                                <span id="artist-detail-verified" class="detail-verified-badge" style="display: none">
+                                    Featured
+                                </span>
+                            </div>
                             <h1 class="title" id="artist-detail-name"></h1>
+                            <div class="detail-header-summary" id="artist-detail-summary"></div>
                             <div class="meta" id="artist-detail-meta"></div>
                             <div id="artist-detail-socials" class="artist-socials"></div>
                             <div id="artist-detail-bio" class="artist-bio"></div>
@@ -2513,6 +2645,7 @@
                         <div class="profile-info-section">
                             <img id="profile-avatar" src="/assets/appicon.png" class="profile-avatar" alt="Avatar" />
                             <div class="profile-details">
+                                <div class="profile-eyebrow">Profile</div>
                                 <h1 id="profile-display-name">User</h1>
                                 <div id="profile-username" class="profile-username">@username</div>
                                 <div id="profile-status" class="profile-status" style="display: none"></div>
@@ -2575,7 +2708,13 @@
                 </div>
 
                 <div id="page-settings" class="page">
-                    <h2 class="section-title">Settings</h2>
+                    <div class="page-intro">
+                        <span class="page-intro-kicker">Preferences</span>
+                        <h2 class="page-intro-title">Settings</h2>
+                        <p class="page-intro-subtitle">
+                            Tune the interface, audio behavior, downloads, connected services, and system options.
+                        </p>
+                    </div>
                     <form
                         class="track-list-search-container settings-search-container"
                         onsubmit="return false;"
