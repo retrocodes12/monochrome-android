@@ -10081,7 +10081,7 @@ body.melodix-ui.sidebar-collapsed #pinned-items-list .nav-item a {
     }
 
     body.melodix-ui .page {
-        padding: 0 1rem 1.5rem;
+        padding: 0 1rem calc(7rem + env(safe-area-inset-bottom, 0px));
     }
 
     body.melodix-ui .home-hero,
@@ -11518,6 +11518,11 @@ body.melodix-ui .volume-controls .volume-bar .volume-fill {
     body.melodix-ui .app-container {
         gap: 0;
         padding: 0;
+        grid-template:
+            'header' auto
+            'main' 1fr / 1fr;
+        min-height: 100vh;
+        min-height: 100dvh;
     }
 
     body.melodix-ui .sidebar,
@@ -11531,6 +11536,8 @@ body.melodix-ui .volume-controls .volume-bar .volume-fill {
         align-items: center;
         gap: 0.55rem;
         padding: 0.9rem 1rem 0.45rem;
+        background: linear-gradient(180deg, rgb(18 18 18 / 0.96), rgb(18 18 18 / 0.5) 70%, transparent);
+        backdrop-filter: blur(16px);
     }
 
     body.melodix-ui .hamburger-menu {
@@ -11577,7 +11584,7 @@ body.melodix-ui .volume-controls .volume-bar .volume-fill {
     }
 
     body.melodix-ui .page {
-        padding: 0 1rem 1.5rem;
+        padding: 0 1rem calc(10.75rem + env(safe-area-inset-bottom, 0px));
     }
 
     body.melodix-ui .home-hero {
@@ -11730,15 +11737,79 @@ body.melodix-ui .volume-controls .volume-bar .volume-fill {
         display: none;
     }
 
+    body.melodix-ui .mobile-bottom-nav {
+        position: fixed;
+        left: 0.75rem;
+        right: 0.75rem;
+        bottom: max(0.55rem, env(safe-area-inset-bottom, 0px));
+        z-index: 210;
+        padding: 0.4rem;
+        border: 1px solid rgb(255 255 255 / 0.06);
+        border-radius: 16px;
+        background: rgb(12 12 12 / 0.94);
+        backdrop-filter: blur(22px);
+        box-shadow: 0 18px 36px rgb(0 0 0 / 0.44);
+    }
+
+    body.melodix-ui .mobile-bottom-nav ul {
+        display: grid;
+        width: 100%;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.35rem;
+        list-style: none;
+    }
+
+    body.melodix-ui .mobile-bottom-nav .nav-item a {
+        justify-content: center;
+        gap: 0.32rem;
+        min-height: 50px;
+        padding: 0.45rem 0.25rem;
+        border-radius: 12px;
+        background: transparent;
+        color: var(--muted-foreground);
+        transform: none;
+    }
+
+    body.melodix-ui .mobile-bottom-nav .nav-item a:hover {
+        background: rgb(255 255 255 / 0.05);
+        transform: none;
+    }
+
+    body.melodix-ui .mobile-bottom-nav .nav-item a.active {
+        background: rgb(255 255 255 / 0.08);
+        color: #ffffff;
+    }
+
+    body.melodix-ui .mobile-bottom-nav .nav-item a svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    body.melodix-ui .mobile-bottom-nav .nav-item a span {
+        font-size: 0.68rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
     body.melodix-ui .now-playing-bar {
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: 0.7rem 0.75rem;
-        padding: 0.75rem 0.9rem calc(0.55rem + env(safe-area-inset-bottom, 0px));
+        position: fixed !important;
+        left: 0.75rem !important;
+        right: 0.75rem !important;
+        bottom: calc(4.85rem + env(safe-area-inset-bottom, 0px));
+        width: auto !important;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.95rem 0.85rem 0.75rem;
         margin: 0;
-        border-inline: none;
-        border-bottom: none;
-        border-radius: 0;
-        background: #121212;
+        border: 1px solid rgb(255 255 255 / 0.06);
+        border-radius: 18px;
+        background:
+            linear-gradient(180deg, rgb(43 28 28 / 0.92), rgb(20 20 20 / 0.96)),
+            radial-gradient(circle at top left, rgb(255 255 255 / 0.08), transparent 42%);
+        box-shadow: 0 20px 44px rgb(0 0 0 / 0.42);
+        backdrop-filter: blur(22px);
+        z-index: 220;
     }
 
     body.melodix-ui .now-playing-bar .track-info {
@@ -11748,60 +11819,80 @@ body.melodix-ui .volume-controls .volume-bar .volume-fill {
     }
 
     body.melodix-ui .now-playing-bar .cover {
-        width: 50px;
-        height: 50px;
-        border-radius: 6px;
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
     }
 
     body.melodix-ui .now-playing-bar .title {
-        font-size: 0.82rem;
+        font-size: 0.8rem;
+        font-weight: 600;
     }
 
     body.melodix-ui .now-playing-bar .artist {
-        font-size: 0.72rem;
+        font-size: 0.68rem;
+        margin-top: 0.04rem;
     }
 
     body.melodix-ui .now-playing-bar .volume-controls {
-        align-items: flex-start !important;
-        gap: 0.25rem !important;
+        grid-column: 3;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 0.2rem !important;
+        padding-top: 0;
     }
 
     body.melodix-ui .player-actions-row {
-        gap: 0.05rem;
+        gap: 0.15rem;
     }
 
     body.melodix-ui .player-actions-row button {
-        width: 30px;
-        height: 30px;
+        width: 32px;
+        height: 32px;
+        border-radius: 999px;
     }
 
     body.melodix-ui #cast-btn,
-    body.melodix-ui #sleep-timer-btn {
+    body.melodix-ui #sleep-timer-btn,
+    body.melodix-ui #mobile-add-playlist-btn,
+    body.melodix-ui #toggle-lyrics-btn,
+    body.melodix-ui #now-playing-mix-btn {
         display: none;
     }
 
+    body.melodix-ui #radio-loading-indicator {
+        display: none !important;
+    }
+
     body.melodix-ui .now-playing-bar .player-controls {
-        gap: 0.45rem;
+        display: contents;
     }
 
     body.melodix-ui .player-controls .buttons {
+        grid-column: 2;
+        align-items: center;
         justify-content: center;
-        gap: 0.8rem;
+        gap: 0.55rem;
     }
 
     body.melodix-ui .player-controls .buttons button {
-        width: 28px;
-        height: 28px;
+        width: 26px;
+        height: 26px;
     }
 
     body.melodix-ui .player-controls .buttons button svg {
-        width: 18px;
-        height: 18px;
+        width: 17px;
+        height: 17px;
+    }
+
+    body.melodix-ui .player-controls .buttons #shuffle-btn,
+    body.melodix-ui .player-controls .buttons #repeat-btn {
+        display: none;
     }
 
     body.melodix-ui .player-controls .buttons .play-pause-btn {
-        width: 40px;
-        height: 40px;
+        width: 38px;
+        height: 38px;
     }
 
     body.melodix-ui .player-controls .buttons .play-pause-btn svg {
@@ -11810,11 +11901,228 @@ body.melodix-ui .volume-controls .volume-bar .volume-fill {
     }
 
     body.melodix-ui .player-controls .progress-container {
-        gap: 0.45rem;
+        position: absolute;
+        top: 0.45rem;
+        left: 0.85rem;
+        right: 0.85rem;
+        gap: 0;
+        align-items: center;
     }
 
     body.melodix-ui .player-controls .progress-container span {
-        font-size: 0.66rem;
+        display: none;
+    }
+
+    body.melodix-ui .player-controls .progress-container .progress-bar {
+        width: 100%;
+        height: 2px;
+        background: rgb(255 255 255 / 0.12);
+    }
+
+    body.melodix-ui .player-controls .progress-container .progress-bar:hover {
+        height: 2px;
+    }
+
+    body.melodix-ui #queue-btn,
+    body.melodix-ui #now-playing-like-btn {
+        background: rgb(255 255 255 / 0.06);
+    }
+
+    body.melodix-ui #fullscreen-cover-overlay {
+        padding: 0;
+        background: #000000;
+    }
+
+    body.melodix-ui #visualizer-container {
+        opacity: 0.18;
+    }
+
+    body.melodix-ui .fullscreen-cover-content {
+        align-items: center;
+        justify-content: center;
+        padding: calc(env(safe-area-inset-top, 0px) + 0.9rem) 1.2rem calc(env(safe-area-inset-bottom, 0px) + 1rem);
+    }
+
+    body.melodix-ui .fullscreen-main-view {
+        width: min(100%, 390px);
+        justify-content: center;
+        align-items: center;
+        padding: 3.25rem 0 0;
+        gap: 1.2rem;
+    }
+
+    body.melodix-ui #toggle-ui-btn {
+        display: none;
+    }
+
+    body.melodix-ui #close-fullscreen-cover-btn,
+    body.melodix-ui .fullscreen-lyrics-toggle {
+        top: calc(env(safe-area-inset-top, 0px) + 0.35rem);
+        width: 40px;
+        height: 40px;
+        background: rgb(255 255 255 / 0.08);
+        opacity: 1;
+    }
+
+    body.melodix-ui #close-fullscreen-cover-btn {
+        right: 0.75rem;
+        font-size: 1.75rem;
+    }
+
+    body.melodix-ui .fullscreen-lyrics-toggle {
+        right: 3.75rem;
+        padding: 0;
+    }
+
+    body.melodix-ui #fullscreen-cover-image {
+        width: min(70vw, 270px);
+        max-width: 270px;
+        aspect-ratio: 1;
+        max-height: none;
+        object-fit: cover;
+        margin: 0 auto;
+        border-radius: 16px;
+        box-shadow:
+            0 28px 60px rgb(0 0 0 / 0.65),
+            0 8px 24px rgb(0 0 0 / 0.45);
+    }
+
+    body.melodix-ui .fullscreen-track-info {
+        width: min(100%, 390px);
+        max-width: 390px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            'title actions'
+            'artist actions';
+        align-items: center;
+        column-gap: 0.75rem;
+        row-gap: 0.1rem;
+        padding: 0;
+        border: none;
+        border-radius: 0;
+        background: transparent;
+        backdrop-filter: none;
+        box-shadow: none;
+        text-align: left;
+    }
+
+    body.melodix-ui #fullscreen-track-title {
+        grid-area: title;
+        margin: 0;
+        font-size: clamp(1.35rem, 5vw, 1.55rem);
+        line-height: 1.15;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    body.melodix-ui #fullscreen-track-artist {
+        grid-area: artist;
+        font-size: 1rem;
+        opacity: 0.58;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    body.melodix-ui .fullscreen-actions {
+        grid-area: actions;
+        gap: 0.3rem;
+        justify-content: flex-end;
+        margin-top: 0;
+    }
+
+    body.melodix-ui .fullscreen-actions .btn-icon {
+        width: 40px;
+        height: 40px;
+        background: none;
+        border: none;
+        color: rgb(255 255 255 / 0.55);
+    }
+
+    body.melodix-ui #fs-add-playlist-btn,
+    body.melodix-ui #fs-download-btn,
+    body.melodix-ui #fs-cast-btn,
+    body.melodix-ui #fullscreen-next-track,
+    body.melodix-ui #fs-quality-btn {
+        display: none !important;
+    }
+
+    body.melodix-ui .fullscreen-controls {
+        width: min(100%, 390px);
+        max-width: 390px;
+        margin-top: 0.1rem;
+        gap: 0.95rem;
+        padding-bottom: 0;
+    }
+
+    body.melodix-ui .fullscreen-progress-container {
+        gap: 0.65rem;
+        font-size: 0.76rem;
+        color: rgb(255 255 255 / 0.4);
+    }
+
+    body.melodix-ui .fullscreen-progress-container .progress-bar {
+        height: 4px;
+        border-radius: 999px;
+        background: rgb(255 255 255 / 0.18);
+    }
+
+    body.melodix-ui .fullscreen-progress-container .progress-bar:hover {
+        height: 4px;
+    }
+
+    body.melodix-ui .fullscreen-buttons {
+        width: 100%;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
+
+    body.melodix-ui .fullscreen-buttons button {
+        width: 40px;
+        height: 40px;
+        padding: 0.35rem;
+        color: rgb(255 255 255 / 0.9);
+    }
+
+    body.melodix-ui .fullscreen-buttons button svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    body.melodix-ui .fullscreen-buttons #fs-play-pause-btn {
+        width: 72px;
+        height: 72px;
+        background: transparent;
+        color: #ffffff;
+    }
+
+    body.melodix-ui .fullscreen-buttons #fs-play-pause-btn:hover {
+        background: transparent;
+    }
+
+    body.melodix-ui .fullscreen-volume-container {
+        width: min(100%, 390px);
+        max-width: 390px;
+        justify-content: flex-start;
+        gap: 0.75rem;
+        margin-top: 0;
+    }
+
+    body.melodix-ui .fs-volume-btn {
+        width: 18px;
+        height: 18px;
+        padding: 0;
+        color: rgb(255 255 255 / 0.38);
+        background: none;
+    }
+
+    body.melodix-ui .fs-volume-bar {
+        flex: 1;
+        width: auto;
+        height: 4px;
+        background: rgb(255 255 255 / 0.18);
     }
 }
 
