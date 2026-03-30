@@ -3,7 +3,8 @@ import discordSvg from '../images/discord.svg?svg&size=22';
 import googleSvg from '../images/google.svg?svg&size=22';
 import githubSvg from '../images/github.svg?svg&size=22';
 import spotifySvg from '../images/spotify.svg?svg&size=22';
-import { isIos, isSafari } from './platform-detection.js';
+import { App as CapacitorApp } from '@capacitor/app';
+import { isIos, isSafari, isNativeAndroid } from './platform-detection.js';
 import { hapticLight } from './haptics.js';
 import { MusicAPI } from './music-api.js';
 import {
@@ -905,6 +906,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Initialize tracker
     initTracker();
+
+    if (isNativeAndroid) {
+        CapacitorApp.addListener('appStateChange', ({ isActive }) => {
+            if (!Player.instance.currentTrack) return;
+
+            Player.instance.updateMediaSession(Player.instance.currentTrack);
+            Player.instance.updateMediaSessionPlaybackState();
+
+            if (isActive) {
+                Player.instance.updateMediaSessionPositionState();
+            }
+        }).catch(() => {});
+    }
 
     const castBtn = document.getElementById('cast-btn');
     initializeCasting(audioPlayer, castBtn);

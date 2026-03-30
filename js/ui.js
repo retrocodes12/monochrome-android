@@ -1184,7 +1184,10 @@ export class UIRenderer {
                     currentImage.src = coverUrl;
                 }
             }
-            overlay.style.setProperty('--bg-image', `url('${this.api.getCoverUrl(track.album?.cover, '1280')}')`);
+            overlay.style.setProperty(
+                '--bg-image',
+                prefersStaticArtwork ? 'none' : `url('${this.api.getCoverUrl(track.album?.cover, '1280')}')`
+            );
             this.extractAndApplyColor(this.api.getCoverUrl(track.album?.cover, '80'));
         }
 

@@ -18,7 +18,7 @@ import {
     radioSettings,
 } from './storage.js';
 import { audioContextManager } from './audio-context.js';
-import { isIos, isSafari } from './platform-detection.js';
+import { isIos, isSafari, isNativeAndroid } from './platform-detection.js';
 import { db } from './db.js';
 
 import { SVG_CLOCK, SVG_ATMOS } from './icons.js';
@@ -55,6 +55,8 @@ export class Player {
         this.isFallbackInProgress = false;
         this.autoplayBlocked = false;
         this.isIOS = isIos;
+        this.isNativeAndroid = isNativeAndroid;
+        this.usesDirectMediaPlayback = isIos || isSafari || isNativeAndroid;
         this.isPwa =
             typeof window !== 'undefined' &&
             (window.matchMedia?.('(display-mode: standalone)')?.matches || window.navigator?.standalone === true);
@@ -149,7 +151,7 @@ export class Player {
         // Handle visibility change for iOS - AudioContext gets suspended when screen locks
         document.addEventListener('visibilitychange', () => {
             const el = this.activeElement;
-            if (document.visibilityState === 'visible' && !el.paused) {
+            if (document.visibilityState === 'visible' && !el.paused && !this.usesDirectMediaPlayback) {
                 // Ensure audio context is resumed when user returns to the app
                 if (!audioContextManager.isReady()) {
                     audioContextManager.init(el);
@@ -229,10 +231,7 @@ export class Player {
 
         const el = this.activeElement;
 
-        // Apply to audio element and/or Web Audio graph
-        const isApple = isIos || isSafari;
-
-        if (audioContextManager.isReady() && !isApple) {
+        if (audioContextManager.isReady() && !this.usesDirectMediaPlayback) {
             // If Web Audio is active, we apply volume there for better compatibility
             // Especially on Linux where audio.volume might not affect the Web Audio graph
             el.volume = 1.0;
@@ -389,13 +388,14 @@ export class Player {
         const setHandlers = () => {
             navigator.mediaSession.setActionHandler('play', async () => {
                 const el = this.activeElement;
-                // Initialize and resume audio context first (required for iOS lock screen)
-                // Must happen before audio.play() or audio won't route through Web Audio
-                if (!audioContextManager.isReady()) {
-                    audioContextManager.init(el);
-                    this.applyReplayGain();
+                if (!this.usesDirectMediaPlayback) {
+                    // Must happen before audio.play() or audio won't route through Web Audio
+                    if (!audioContextManager.isReady()) {
+                        audioContextManager.init(el);
+                        this.applyReplayGain();
+                    }
+                    await audioContextManager.resume();
                 }
-                await audioContextManager.resume();
 
                 try {
                     await el.play();
@@ -411,22 +411,24 @@ export class Player {
             });
 
             navigator.mediaSession.setActionHandler('previoustrack', async () => {
-                // Ensure audio context is active for iOS lock screen controls
-                if (!audioContextManager.isReady()) {
-                    audioContextManager.init(this.activeElement);
-                    this.applyReplayGain();
+                if (!this.usesDirectMediaPlayback) {
+                    if (!audioContextManager.isReady()) {
+                        audioContextManager.init(this.activeElement);
+                        this.applyReplayGain();
+                    }
+                    await audioContextManager.resume();
                 }
-                await audioContextManager.resume();
                 this.playPrev();
             });
 
             navigator.mediaSession.setActionHandler('nexttrack', async () => {
-                // Ensure audio context is active for iOS lock screen controls
-                if (!audioContextManager.isReady()) {
-                    audioContextManager.init(this.activeElement);
-                    this.applyReplayGain();
+                if (!this.usesDirectMediaPlayback) {
+                    if (!audioContextManager.isReady()) {
+                        audioContextManager.init(this.activeElement);
+                        this.applyReplayGain();
+                    }
+                    await audioContextManager.resume();
                 }
-                await audioContextManager.resume();
                 this.playNext();
             });
 
