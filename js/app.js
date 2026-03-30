@@ -521,7 +521,9 @@ async function upsertYouTubeImportedPlaylist(name, tracks, cover, sourceId) {
         existing.name = name;
         existing.cover = cover || existing.cover || '';
         existing.description = description;
-        existing.tracks = tracks.map((track) => db._minifyItem(track.type || 'track', { ...track, addedAt: Date.now() }));
+        existing.tracks = tracks.map((track) =>
+            db._minifyItem(track.type || 'track', { ...track, addedAt: Date.now() })
+        );
         const updated = await db.updatePlaylist(existing);
         window.dispatchEvent(new CustomEvent('playlist-tracks-changed'));
         await syncManager.syncUserPlaylist(updated, 'update');
@@ -546,14 +548,8 @@ async function importYouTubeCollectionToMonochrome({
         throw new Error(`No playable songs were found in ${sourceName}.`);
     }
 
-    const {
-        progressElement,
-        progressFill,
-        progressCurrent,
-        progressTotal,
-        currentTrackElement,
-        currentArtistElement,
-    } = getImportProgressElements();
+    const { progressElement, progressFill, progressCurrent, progressTotal, currentTrackElement, currentArtistElement } =
+        getImportProgressElements();
 
     if (progressElement) {
         progressElement.style.display = 'block';
@@ -678,7 +674,10 @@ function initializeYouTubeMusicAccountImport() {
                 myRating: 'like',
             });
 
-            const cover = likedItems[0]?.snippet?.thumbnails?.medium?.url || likedItems[0]?.snippet?.thumbnails?.default?.url || '';
+            const cover =
+                likedItems[0]?.snippet?.thumbnails?.medium?.url ||
+                likedItems[0]?.snippet?.thumbnails?.default?.url ||
+                '';
             const result = await importYouTubeCollectionToMonochrome({
                 sourceName: 'YouTube Music Likes',
                 sourceId: 'likes',
