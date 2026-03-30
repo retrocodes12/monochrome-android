@@ -140,15 +140,14 @@
                     "
                 ></div>
                 <div class="fullscreen-top-actions">
-                    <button id="fs-download-btn" class="btn-icon" title="Download">
-                        <use svg="!lucide/download.svg" size="22" />
-                    </button>
-                    <button id="toggle-fullscreen-lyrics-btn" class="fullscreen-lyrics-toggle" title="Toggle Lyrics">
-                        <use svg="!lucide/mic-vocal.svg" size="22" />
-                    </button>
                     <button id="close-fullscreen-cover-btn" title="Close" aria-label="Close">
-                        <use svg="!lucide/x.svg" size="22" />
+                        <use svg="!lucide/arrow-left.svg" size="22" />
                     </button>
+                    <div class="fullscreen-header-copy" aria-hidden="true">
+                        <span class="fullscreen-header-eyebrow">Now Playing</span>
+                        <span class="fullscreen-header-title">Monochrome Music</span>
+                    </div>
+                    <div class="fullscreen-header-spacer" aria-hidden="true"></div>
                 </div>
                 <button id="toggle-ui-btn" class="fullscreen-ui-toggle" title="Toggle UI">
                     <use svg="!lucide/x.svg" size="24" />
@@ -169,12 +168,6 @@
                             </button>
                             <button id="fs-add-playlist-btn" class="btn-icon" title="Add to Playlist">
                                 <use svg="!lucide/square-pen.svg" size="24" />
-                            </button>
-                            <button id="fs-cast-btn" class="btn-icon" title="Cast">
-                                <use svg="!lucide/cast.svg" size="24" />
-                            </button>
-                            <button id="fs-queue-btn" class="btn-icon" title="Queue">
-                                <use svg="!lucide/list.svg" size="24" />
                             </button>
                         </div>
                         <div id="fullscreen-next-track" style="display: none">
@@ -211,6 +204,24 @@
                                 <span class="fs-quality-label">Auto</span>
                             </button>
                             <div id="fs-quality-menu" class="fs-quality-menu" style="display: none"></div>
+                        </div>
+                        <div class="fullscreen-utility-strip">
+                            <button id="fs-queue-btn" class="fullscreen-utility-btn" title="Queue">
+                                <use svg="!lucide/list.svg" size="18" />
+                                <span>Queue</span>
+                            </button>
+                            <button id="fs-download-btn" class="fullscreen-utility-btn" title="Download">
+                                <use svg="!lucide/download.svg" size="18" />
+                                <span>Download</span>
+                            </button>
+                            <button
+                                id="toggle-fullscreen-lyrics-btn"
+                                class="fullscreen-utility-btn fullscreen-lyrics-toggle"
+                                title="Toggle Lyrics"
+                            >
+                                <use svg="!lucide/mic-vocal.svg" size="18" />
+                                <span>Lyrics</span>
+                            </button>
                         </div>
                         <div class="fullscreen-volume-container">
                             <button id="fs-volume-btn" class="fs-volume-btn" title="Mute">
@@ -1995,11 +2006,11 @@
                     <section class="content-section">
                         <h2 class="section-title">Favorites</h2>
                         <div class="search-tabs">
-                            <button class="search-tab active" data-tab="tracks">Liked Tracks</button>
+                            <button class="search-tab active" data-tab="tracks">Songs</button>
                             <button class="search-tab" data-tab="videos">Videos</button>
                             <button class="search-tab" data-tab="albums">Albums</button>
                             <button class="search-tab" data-tab="artists">Artists</button>
-                            <button class="search-tab" data-tab="playlists">Playlists and Mixes</button>
+                            <button class="search-tab" data-tab="playlists">Playlists</button>
                             <button class="search-tab" data-tab="local">Local Files</button>
                         </div>
                         <div class="search-tab-content active" id="library-tab-tracks">
@@ -4923,6 +4934,12 @@
                         <a href="/search">
                             <use svg="!lucide/search.svg" size="20" />
                             <span>Search</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/recent">
+                            <use svg="!lucide/history.svg" size="20" />
+                            <span>Recent</span>
                         </a>
                     </li>
                     <li class="nav-item">

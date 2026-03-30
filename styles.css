@@ -12479,6 +12479,313 @@ body.melodix-ui #artist-section-in-library .section-title button {
     }
 }
 
+@media (max-width: 768px) {
+    body.melodix-ui #page-library .page-intro {
+        margin-bottom: 0.75rem;
+    }
+
+    body.melodix-ui #page-library .page-intro-kicker {
+        font-size: 0.62rem;
+        letter-spacing: 0.18em;
+    }
+
+    body.melodix-ui #page-library .page-intro-title {
+        font-size: clamp(1.9rem, 8vw, 2.4rem);
+        line-height: 0.98;
+    }
+
+    body.melodix-ui #page-library .page-intro-subtitle {
+        max-width: 30ch;
+        font-size: 0.84rem;
+        line-height: 1.4;
+    }
+
+    body.melodix-ui #page-library .library-chip-row,
+    body.melodix-ui #page-library .search-tabs {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 0.45rem;
+        overflow-x: auto;
+        margin: 0 0 0.9rem;
+        padding: 0.05rem 0 0.15rem;
+        scrollbar-width: none;
+    }
+
+    body.melodix-ui #page-library .library-chip-row::-webkit-scrollbar,
+    body.melodix-ui #page-library .search-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    body.melodix-ui #page-library .library-chip,
+    body.melodix-ui #page-library .search-tab {
+        flex: 0 0 auto;
+        min-height: 32px;
+        padding: 0.42rem 0.82rem;
+        border: 1px solid rgb(255 255 255 / 0.15);
+        border-radius: 999px;
+        background: rgb(255 255 255 / 0.03);
+        color: rgb(255 255 255 / 0.74);
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0;
+        transition:
+            border-color 0.2s ease,
+            background-color 0.2s ease,
+            color 0.2s ease;
+    }
+
+    body.melodix-ui #page-library .library-chip:hover,
+    body.melodix-ui #page-library .search-tab:hover {
+        background: rgb(255 255 255 / 0.07);
+        border-color: rgb(255 255 255 / 0.2);
+        transform: none;
+    }
+
+    body.melodix-ui #page-library .library-chip.active,
+    body.melodix-ui #page-library .search-tab.active {
+        background: rgb(255 255 255 / 0.14);
+        border-color: rgb(255 255 255 / 0.24);
+        color: #fff;
+    }
+
+    body.melodix-ui #page-library .content-section {
+        margin-bottom: 1.45rem;
+    }
+
+    body.melodix-ui #page-library .library-header {
+        margin-bottom: 0.8rem;
+    }
+
+    body.melodix-ui #page-library .library-header h2,
+    body.melodix-ui #page-library .section-title {
+        font-size: 1.55rem;
+        margin-bottom: 0.7rem;
+    }
+
+    body.melodix-ui #my-playlists-container,
+    body.melodix-ui #my-folders-container {
+        gap: 0.75rem;
+    }
+
+    body.melodix-ui #page-library .library-create-dashed-card {
+        min-height: 146px;
+        padding: 0.8rem;
+        border-radius: 14px;
+        background: linear-gradient(180deg, rgb(27 27 28 / 0.98), rgb(20 20 21 / 0.98));
+        border: 1px solid rgb(255 255 255 / 0.05);
+        box-shadow: none;
+    }
+
+    body.melodix-ui #page-library .library-create-dashed-art {
+        width: 78px;
+        height: 78px;
+        margin-bottom: 0.85rem;
+        border-radius: 12px;
+        border-style: solid;
+        border-color: rgb(255 255 255 / 0.1);
+        background: rgb(255 255 255 / 0.03);
+    }
+
+    body.melodix-ui #page-library .library-create-dashed-card .card-title {
+        font-size: 0.82rem;
+        line-height: 1.25;
+    }
+
+    body.melodix-ui .now-playing-bar {
+        position: fixed !important;
+        left: 0.7rem !important;
+        right: 0.7rem !important;
+        bottom: calc(4.55rem + env(safe-area-inset-bottom, 0px));
+        width: auto !important;
+        min-height: 78px;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            'track controls'
+            'progress progress';
+        align-items: center;
+        gap: 0.55rem 0.8rem;
+        padding: 0.72rem 0.8rem 0.62rem;
+        margin: 0;
+        border: 1px solid rgb(255 255 255 / 0.06);
+        border-radius: 18px;
+        background: linear-gradient(180deg, rgb(18 18 18 / 0.98), rgb(11 11 12 / 0.98));
+        box-shadow: 0 18px 42px rgb(0 0 0 / 0.34);
+        backdrop-filter: blur(16px);
+        z-index: 220;
+    }
+
+    body.melodix-ui .now-playing-bar .track-info {
+        grid-area: track;
+        min-width: 0;
+        display: grid;
+        grid-template-columns: 46px minmax(0, 1fr);
+        align-items: center;
+        gap: 0.65rem;
+        padding-left: 0;
+    }
+
+    body.melodix-ui .now-playing-bar .cover {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgb(0 0 0 / 0.28);
+    }
+
+    body.melodix-ui .now-playing-bar .details {
+        min-width: 0;
+        display: grid;
+        gap: 0.12rem;
+        align-content: center;
+    }
+
+    body.melodix-ui .now-playing-bar .title {
+        font-size: 0.8rem;
+        font-weight: 700;
+        line-height: 1.18;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    body.melodix-ui .now-playing-bar .album {
+        display: none;
+    }
+
+    body.melodix-ui .now-playing-bar .artist {
+        margin-top: 0;
+        font-size: 0.66rem;
+        line-height: 1.15;
+        color: rgb(255 255 255 / 0.58);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    body.melodix-ui .now-playing-bar .player-controls {
+        grid-area: controls;
+        display: grid !important;
+        grid-template-columns: auto;
+        justify-items: end;
+        align-items: center;
+        min-width: 112px;
+        gap: 0.35rem;
+    }
+
+    body.melodix-ui .now-playing-bar .player-controls .buttons {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.22rem;
+        grid-column: auto;
+    }
+
+    body.melodix-ui .now-playing-bar .player-controls .buttons #shuffle-btn,
+    body.melodix-ui .now-playing-bar .player-controls .buttons #repeat-btn {
+        display: none;
+    }
+
+    body.melodix-ui .now-playing-bar .player-controls .buttons button {
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        border-radius: 999px;
+        background: transparent;
+        color: rgb(255 255 255 / 0.86);
+    }
+
+    body.melodix-ui .now-playing-bar .player-controls .buttons button svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    body.melodix-ui .now-playing-bar .player-controls .buttons .play-pause-btn {
+        width: 36px;
+        height: 36px;
+        background: #fff;
+        color: #101010;
+        box-shadow: 0 10px 20px rgb(0 0 0 / 0.26);
+    }
+
+    body.melodix-ui .now-playing-bar .player-controls .buttons .play-pause-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    body.melodix-ui .now-playing-bar .player-controls .progress-container {
+        grid-area: progress;
+        position: static;
+        width: 100%;
+        max-width: none;
+        display: flex;
+        align-items: center;
+        gap: 0;
+    }
+
+    body.melodix-ui .now-playing-bar .player-controls .progress-container span {
+        display: none;
+    }
+
+    body.melodix-ui .now-playing-bar .player-controls .progress-container .progress-bar {
+        width: 100%;
+        height: 3px;
+        border-radius: 999px;
+        background: rgb(255 255 255 / 0.14);
+    }
+
+    body.melodix-ui .now-playing-bar .player-controls .progress-container .progress-fill {
+        border-radius: 999px;
+        background: #fff;
+    }
+
+    body.melodix-ui .now-playing-bar .volume-controls {
+        display: none !important;
+    }
+}
+
+@media (max-width: 420px) {
+    body.melodix-ui #page-library .library-chip,
+    body.melodix-ui #page-library .search-tab {
+        min-height: 30px;
+        padding: 0.38rem 0.72rem;
+        font-size: 0.72rem;
+    }
+
+    body.melodix-ui .now-playing-bar {
+        left: 0.6rem !important;
+        right: 0.6rem !important;
+        padding: 0.68rem 0.72rem 0.58rem;
+    }
+
+    body.melodix-ui .now-playing-bar .track-info {
+        grid-template-columns: 42px minmax(0, 1fr);
+        gap: 0.55rem;
+    }
+
+    body.melodix-ui .now-playing-bar .cover {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+    }
+
+    body.melodix-ui .now-playing-bar .player-controls {
+        min-width: 100px;
+    }
+
+    body.melodix-ui .now-playing-bar .player-controls .buttons {
+        gap: 0.16rem;
+    }
+
+    body.melodix-ui .now-playing-bar .player-controls .buttons button {
+        width: 26px;
+        height: 26px;
+    }
+
+    body.melodix-ui .now-playing-bar .player-controls .buttons .play-pause-btn {
+        width: 34px;
+        height: 34px;
+    }
+}
+
 body.melodix-ui #fullscreen-cover-overlay {
     background:
         radial-gradient(circle at top center, rgb(255 255 255 / 0.08), transparent 32%),
@@ -12691,14 +12998,117 @@ body.melodix-ui .fs-volume-bar {
     background: rgb(255 255 255 / 0.16);
 }
 
+body.melodix-ui .fullscreen-top-actions {
+    position: absolute;
+    top: calc(env(safe-area-inset-top, 0px) + 0.7rem);
+    left: 50%;
+    right: auto;
+    width: min(calc(100% - 2rem), 400px);
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) 42px;
+    align-items: center;
+    gap: 0.75rem;
+    transform: translateX(-50%);
+    z-index: 14;
+}
+
+body.melodix-ui .fullscreen-header-copy {
+    min-width: 0;
+    display: grid;
+    justify-items: center;
+    gap: 0.1rem;
+    text-align: center;
+}
+
+body.melodix-ui .fullscreen-header-eyebrow {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.42);
+}
+
+body.melodix-ui .fullscreen-header-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+body.melodix-ui .fullscreen-header-spacer {
+    width: 42px;
+    height: 42px;
+}
+
+body.melodix-ui .fullscreen-top-actions #close-fullscreen-cover-btn {
+    position: static;
+    display: inline-flex;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: 999px;
+    background: rgb(10 10 10 / 0.68);
+    color: #fff;
+    opacity: 1;
+    backdrop-filter: blur(18px);
+    box-shadow: 0 10px 22px rgb(0 0 0 / 0.24);
+}
+
+body.melodix-ui .fullscreen-top-actions #close-fullscreen-cover-btn:hover {
+    background: rgb(20 20 20 / 0.9);
+    transform: translateY(-1px);
+}
+
+body.melodix-ui .fullscreen-utility-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7rem;
+    width: min(100%, 400px);
+    max-width: 400px;
+}
+
+body.melodix-ui .fullscreen-utility-btn {
+    flex: 1 1 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.42rem;
+    min-height: 42px;
+    padding: 0.62rem 0.75rem;
+    border: 1px solid rgb(255 255 255 / 0.08);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.04);
+    color: rgb(255 255 255 / 0.72);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+body.melodix-ui .fullscreen-utility-btn:hover,
+body.melodix-ui .fullscreen-utility-btn.active {
+    background: rgb(255 255 255 / 0.1);
+    color: #fff;
+}
+
+body.melodix-ui #fs-cast-btn,
+body.melodix-ui #fullscreen-next-track,
+body.melodix-ui #fs-quality-btn {
+    display: none !important;
+}
+
 @media (max-width: 768px) {
     body.melodix-ui .main-header {
-        gap: 0.5rem;
-        padding: calc(env(safe-area-inset-top, 0px) + 0.6rem) 1rem 0.45rem;
+        gap: 0.45rem;
+        padding: calc(env(safe-area-inset-top, 0px) + 0.55rem) 0.95rem 0.42rem;
     }
 
     body.melodix-ui .nav-controls {
-        gap: 0.35rem;
+        gap: 0.3rem;
     }
 
     body.melodix-ui .nav-controls .nav-btn {
@@ -12708,112 +13118,225 @@ body.melodix-ui .fs-volume-bar {
 
     body.melodix-ui .search-bar input {
         min-height: 38px;
-        padding: 0.62rem 2.3rem 0.62rem 2.15rem;
-        font-size: 0.9rem;
+        padding: 0.6rem 2.25rem 0.6rem 2.1rem;
+        font-size: 0.88rem;
     }
 
     body.melodix-ui .page {
-        padding: 0 1rem calc(9.35rem + env(safe-area-inset-bottom, 0px));
+        padding: 0 0.95rem calc(9.65rem + env(safe-area-inset-bottom, 0px));
     }
 
     body.melodix-ui .mobile-bottom-nav {
         left: 0.7rem;
         right: 0.7rem;
         bottom: max(0.55rem, env(safe-area-inset-bottom, 0px));
-        padding: 0.32rem;
+        padding: 0.34rem;
         border-color: rgb(255 255 255 / 0.05);
         border-radius: 18px;
         background: rgb(11 11 12 / 0.96);
         box-shadow: 0 18px 38px rgb(0 0 0 / 0.38);
     }
 
+    body.melodix-ui .mobile-bottom-nav ul {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
     body.melodix-ui .mobile-bottom-nav .nav-item a {
         min-height: 48px;
-        padding: 0.42rem 0.2rem;
+        padding: 0.42rem 0.15rem;
         border-radius: 14px;
     }
 
     body.melodix-ui .mobile-bottom-nav .nav-item a span {
-        font-size: 0.66rem;
+        font-size: 0.64rem;
+    }
+
+    body.melodix-ui #page-library .page-intro {
+        margin-bottom: 0.7rem;
+    }
+
+    body.melodix-ui #page-library .page-intro-subtitle,
+    body.melodix-ui #page-library .library-chip-row {
+        display: none;
+    }
+
+    body.melodix-ui #page-library .search-tabs {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 0.5rem;
+        overflow-x: auto;
+        margin: 0 0 1rem;
+        padding: 0.05rem 0 0.18rem;
+        scrollbar-width: none;
+    }
+
+    body.melodix-ui #page-library .search-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    body.melodix-ui #page-library .search-tab {
+        flex: 0 0 auto;
+        min-height: 34px;
+        padding: 0.46rem 0.88rem;
+        border: 1px solid rgb(255 255 255 / 0.16);
+        border-radius: 999px;
+        background: transparent;
+        color: rgb(255 255 255 / 0.72);
+        font-size: 0.76rem;
+        font-weight: 700;
+    }
+
+    body.melodix-ui #page-library .search-tab.active {
+        border-color: #fff;
+        background: #fff;
+        color: #111;
+    }
+
+    body.melodix-ui #page-library .content-section {
+        margin-bottom: 1.55rem;
+    }
+
+    body.melodix-ui #page-library .library-header {
+        margin-bottom: 0.75rem;
+    }
+
+    body.melodix-ui #page-library .library-header h2,
+    body.melodix-ui #page-library .section-title {
+        font-size: 1.45rem;
+        margin-bottom: 0.65rem;
+    }
+
+    body.melodix-ui #page-library .card-grid {
+        gap: 0.75rem;
+    }
+
+    body.melodix-ui #page-library .library-create-dashed-card {
+        min-height: 136px;
+        padding: 0.85rem;
+        border-radius: 16px;
+        background: linear-gradient(180deg, rgb(24 24 25 / 0.98), rgb(17 17 18 / 0.98));
+        border: 1px solid rgb(255 255 255 / 0.05);
+    }
+
+    body.melodix-ui #page-library .library-create-dashed-art {
+        width: 72px;
+        height: 72px;
+        margin-bottom: 0.8rem;
+        border-radius: 12px;
+        background: rgb(255 255 255 / 0.03);
     }
 
     body.melodix-ui .now-playing-bar {
+        position: fixed !important;
         left: 0.7rem !important;
         right: 0.7rem !important;
-        bottom: calc(4.55rem + env(safe-area-inset-bottom, 0px));
+        bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
+        width: auto !important;
+        min-height: 74px;
         grid-template-columns: minmax(0, 1fr) auto;
-        gap: 0.65rem;
-        padding: 0.74rem 0.8rem 0.7rem;
-        border-radius: 18px;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.95rem 0.88rem 0.78rem;
+        margin: 0;
+        border: 1px solid rgb(255 255 255 / 0.05);
+        border-radius: 20px;
         background:
-            linear-gradient(180deg, rgb(56 40 30 / 0.94), rgb(21 21 22 / 0.97)),
-            radial-gradient(circle at top left, rgb(255 255 255 / 0.08), transparent 38%);
-        box-shadow: 0 22px 44px rgb(0 0 0 / 0.36);
+            linear-gradient(180deg, rgb(38 31 28 / 0.98), rgb(16 16 17 / 0.98)),
+            radial-gradient(circle at top left, rgb(255 255 255 / 0.05), transparent 42%);
+        box-shadow: 0 18px 40px rgb(0 0 0 / 0.36);
+        backdrop-filter: blur(16px);
+        overflow: hidden;
+        z-index: 220;
     }
 
     body.melodix-ui .now-playing-bar .track-info {
         min-width: 0;
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        align-items: center;
         gap: 0.7rem;
+        padding-left: 0;
     }
 
     body.melodix-ui .now-playing-bar .cover {
-        width: 48px;
-        height: 48px;
-        border-radius: 12px;
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        box-shadow: 0 10px 18px rgb(0 0 0 / 0.26);
     }
 
     body.melodix-ui .now-playing-bar .details {
         min-width: 0;
+        display: grid;
+        gap: 0.12rem;
+    }
+
+    body.melodix-ui .now-playing-bar .title {
+        font-size: 0.78rem;
+        font-weight: 700;
+        line-height: 1.18;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    body.melodix-ui .now-playing-bar .title .quality-badge,
+    body.melodix-ui .now-playing-bar .title .shaka-quality-badge {
+        display: none !important;
     }
 
     body.melodix-ui .now-playing-bar .album {
         display: none;
     }
 
-    body.melodix-ui .now-playing-bar .title {
-        font-size: 0.82rem;
-        font-weight: 700;
-    }
-
     body.melodix-ui .now-playing-bar .artist {
-        margin-top: 0.12rem;
-        font-size: 0.7rem;
-        color: rgb(255 255 255 / 0.62);
-    }
-
-    body.melodix-ui .now-playing-bar .volume-controls {
-        display: none;
+        margin-top: 0;
+        font-size: 0.66rem;
+        line-height: 1.15;
+        color: rgb(255 255 255 / 0.56);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     body.melodix-ui .now-playing-bar .player-controls {
         display: flex !important;
-        flex-direction: column;
-        align-items: flex-end;
-        justify-content: center;
-        min-width: 118px;
-        gap: 0.35rem;
+        align-items: center;
+        justify-content: flex-end;
+        min-width: auto;
+        gap: 0.42rem;
     }
 
-    body.melodix-ui #radio-loading-indicator {
+    body.melodix-ui #radio-loading-indicator,
+    body.melodix-ui .now-playing-bar .volume-controls {
         display: none !important;
     }
 
     body.melodix-ui .player-controls .buttons {
-        grid-column: auto;
+        display: flex;
+        align-items: center;
         justify-content: flex-end;
-        gap: 0.32rem;
+        gap: 0.18rem;
+        padding: 0;
     }
 
     body.melodix-ui .player-controls .buttons #shuffle-btn,
     body.melodix-ui .player-controls .buttons #repeat-btn {
-        display: none;
+        display: none !important;
     }
 
     body.melodix-ui .player-controls .buttons button {
         width: 30px;
         height: 30px;
+        padding: 0;
         border-radius: 999px;
         background: transparent;
+        color: rgb(255 255 255 / 0.84);
+    }
+
+    body.melodix-ui .player-controls .buttons button svg {
+        width: 16px;
+        height: 16px;
     }
 
     body.melodix-ui .player-controls .buttons .play-pause-btn {
@@ -12821,19 +13344,22 @@ body.melodix-ui .fs-volume-bar {
         height: 38px;
         background: #fff;
         color: #101010;
-        box-shadow: 0 10px 24px rgb(0 0 0 / 0.28);
+        box-shadow: 0 10px 22px rgb(0 0 0 / 0.28);
     }
 
     body.melodix-ui .player-controls .buttons .play-pause-btn svg {
-        width: 17px;
-        height: 17px;
+        width: 16px;
+        height: 16px;
     }
 
     body.melodix-ui .player-controls .progress-container {
-        position: static;
-        justify-content: flex-end;
-        width: 118px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
         gap: 0;
+        align-items: stretch;
     }
 
     body.melodix-ui .player-controls .progress-container span {
@@ -12842,68 +13368,196 @@ body.melodix-ui .fs-volume-bar {
 
     body.melodix-ui .player-controls .progress-container .progress-bar {
         width: 100%;
-        height: 3px;
-        background: rgb(255 255 255 / 0.14);
+        height: 100%;
+        border-radius: 0;
+        background: rgb(255 255 255 / 0.1);
     }
 
-    body.melodix-ui .fullscreen-top-actions {
-        top: calc(env(safe-area-inset-top, 0px) + 0.7rem);
-        right: 0.95rem;
-    }
-
-    body.melodix-ui .fullscreen-top-actions #fs-download-btn,
-    body.melodix-ui .fullscreen-top-actions .fullscreen-lyrics-toggle,
-    body.melodix-ui .fullscreen-top-actions #close-fullscreen-cover-btn {
-        width: 38px;
-        height: 38px;
+    body.melodix-ui .player-controls .progress-container .progress-fill {
+        background: #1ed760;
+        border-radius: 0 999px 999px 0;
     }
 
     body.melodix-ui .fullscreen-cover-content {
-        padding: calc(env(safe-area-inset-top, 0px) + 0.7rem) 1rem calc(env(safe-area-inset-bottom, 0px) + 1.1rem);
+        align-items: center;
+        justify-content: flex-start;
+        padding: calc(env(safe-area-inset-top, 0px) + 0.7rem) 1rem calc(env(safe-area-inset-bottom, 0px) + 1.15rem);
     }
 
     body.melodix-ui .fullscreen-main-view {
         width: min(100%, 360px);
-        padding-top: 3.2rem;
+        max-width: 360px;
+        padding-top: 3.35rem;
         gap: 1.15rem;
     }
 
+    body.melodix-ui #toggle-ui-btn {
+        display: none !important;
+    }
+
     body.melodix-ui #fullscreen-cover-image {
-        width: min(78vw, 286px);
-        border-radius: 22px;
+        width: min(80vw, 296px);
+        border-radius: 24px;
     }
 
     body.melodix-ui .fullscreen-track-info,
     body.melodix-ui .fullscreen-controls,
-    body.melodix-ui .fullscreen-volume-container {
+    body.melodix-ui .fullscreen-utility-strip {
         width: min(100%, 360px);
         max-width: 360px;
     }
 
+    body.melodix-ui .fullscreen-track-info {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            'title actions'
+            'artist actions';
+        align-items: center;
+        column-gap: 0.7rem;
+        row-gap: 0.12rem;
+        padding: 0;
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        text-align: left;
+    }
+
     body.melodix-ui #fullscreen-track-title {
-        font-size: clamp(1.45rem, 6vw, 1.8rem);
+        grid-area: title;
+        margin: 0;
+        font-size: clamp(1.5rem, 6vw, 1.9rem);
+        line-height: 1.08;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    body.melodix-ui #fullscreen-track-artist {
+        grid-area: artist;
+        margin-top: 0;
+        font-size: 0.96rem;
+        color: rgb(255 255 255 / 0.62);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     body.melodix-ui .fullscreen-actions {
-        margin-top: 0.8rem;
+        grid-area: actions;
+        justify-content: flex-end;
+        gap: 0.35rem;
+        margin-top: 0;
     }
 
     body.melodix-ui .fullscreen-actions .btn-icon {
         width: 40px;
         height: 40px;
+        border: 1px solid rgb(255 255 255 / 0.08);
+        border-radius: 999px;
+        background: rgb(255 255 255 / 0.05);
+        color: rgb(255 255 255 / 0.8);
+    }
+
+    body.melodix-ui .fullscreen-controls {
+        gap: 0.95rem;
+        margin-top: 0.15rem;
+    }
+
+    body.melodix-ui .fullscreen-progress-container {
+        gap: 0.7rem;
+        font-size: 0.76rem;
+        color: rgb(255 255 255 / 0.52);
+    }
+
+    body.melodix-ui .fullscreen-progress-container .progress-bar {
+        height: 5px;
+        border-radius: 999px;
+        background: rgb(255 255 255 / 0.16);
+    }
+
+    body.melodix-ui .fullscreen-buttons {
+        width: 100%;
+        justify-content: space-between;
+        gap: 0.5rem;
     }
 
     body.melodix-ui .fullscreen-buttons button {
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
+        border: none;
+        background: transparent;
+        color: rgb(255 255 255 / 0.92);
     }
 
     body.melodix-ui .fullscreen-buttons #fs-play-pause-btn {
-        width: 60px;
-        height: 60px;
+        width: 62px;
+        height: 62px;
+        background: #fff;
+        color: #101010;
+        box-shadow: 0 18px 36px rgb(0 0 0 / 0.26);
+    }
+
+    body.melodix-ui .fullscreen-buttons #fs-play-pause-btn:hover {
+        background: #fff;
     }
 
     body.melodix-ui .fullscreen-volume-container {
-        gap: 0.7rem;
+        display: none;
+    }
+}
+
+@media (max-width: 420px) {
+    body.melodix-ui .page {
+        padding: 0 0.85rem calc(9.35rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    body.melodix-ui .mobile-bottom-nav .nav-item a span {
+        font-size: 0.62rem;
+    }
+
+    body.melodix-ui #page-library .search-tab {
+        min-height: 32px;
+        padding: 0.42rem 0.76rem;
+        font-size: 0.72rem;
+    }
+
+    body.melodix-ui .now-playing-bar {
+        left: 0.6rem !important;
+        right: 0.6rem !important;
+        padding: 0.9rem 0.8rem 0.74rem;
+    }
+
+    body.melodix-ui .now-playing-bar .track-info {
+        grid-template-columns: 42px minmax(0, 1fr);
+        gap: 0.6rem;
+    }
+
+    body.melodix-ui .now-playing-bar .cover {
+        width: 42px;
+        height: 42px;
+    }
+
+    body.melodix-ui .player-controls .buttons button {
+        width: 28px;
+        height: 28px;
+    }
+
+    body.melodix-ui .player-controls .buttons .play-pause-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+    body.melodix-ui .fullscreen-top-actions,
+    body.melodix-ui .fullscreen-track-info,
+    body.melodix-ui .fullscreen-controls,
+    body.melodix-ui .fullscreen-utility-strip {
+        width: min(calc(100% - 1.6rem), 340px);
+    }
+
+    body.melodix-ui .fullscreen-utility-btn {
+        min-height: 40px;
+        padding: 0.56rem 0.55rem;
+        font-size: 0.72rem;
     }
 }
