@@ -133,6 +133,41 @@ async function loadMetadataModule() {
     return metadataModule;
 }
 
+function setupMobilePlayerPortal() {
+    const playerBar = document.querySelector('.now-playing-bar');
+    if (!playerBar) return;
+
+    const playerHost = playerBar.parentNode;
+    if (!playerHost) return;
+
+    const mobileViewport = window.matchMedia('(max-width: 768px)');
+    const playerAnchor = document.createComment('now-playing-bar-anchor');
+    playerHost.insertBefore(playerAnchor, playerBar);
+
+    const syncPlayerPortal = () => {
+        if (mobileViewport.matches) {
+            if (playerBar.parentNode !== document.body) {
+                document.body.appendChild(playerBar);
+            }
+            return;
+        }
+
+        if (playerAnchor.parentNode && playerBar.parentNode !== playerAnchor.parentNode) {
+            playerAnchor.parentNode.insertBefore(playerBar, playerAnchor.nextSibling);
+        }
+    };
+
+    syncPlayerPortal();
+
+    if (typeof mobileViewport.addEventListener === 'function') {
+        mobileViewport.addEventListener('change', syncPlayerPortal);
+    } else if (typeof mobileViewport.addListener === 'function') {
+        mobileViewport.addListener(syncPlayerPortal);
+    }
+
+    window.addEventListener('resize', syncPlayerPortal, { passive: true });
+}
+
 function initializeCasting(audioPlayer, castBtn) {
     if (!castBtn) return;
 
@@ -875,6 +910,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initializeCasting(audioPlayer, castBtn);
 
     await UIRenderer.initialize(MusicAPI.instance, Player.instance);
+    setupMobilePlayerPortal();
 
     /**
      * Scans the configured local media folder and refreshes `window.localFilesCache`.
