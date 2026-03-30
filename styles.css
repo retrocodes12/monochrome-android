@@ -11777,7 +11777,7 @@ body.melodix-ui .volume-controls .volume-bar .volume-fill {
 
     body.melodix-ui .mobile-bottom-nav .nav-item a.active {
         background: rgb(255 255 255 / 0.08);
-        color: #ffffff;
+        color: #fff;
     }
 
     body.melodix-ui .mobile-bottom-nav .nav-item a svg {
@@ -11930,7 +11930,7 @@ body.melodix-ui .volume-controls .volume-bar .volume-fill {
 
     body.melodix-ui #fullscreen-cover-overlay {
         padding: 0;
-        background: #000000;
+        background: #000;
     }
 
     body.melodix-ui #visualizer-container {
@@ -12095,7 +12095,7 @@ body.melodix-ui .volume-controls .volume-bar .volume-fill {
         width: 72px;
         height: 72px;
         background: transparent;
-        color: #ffffff;
+        color: #fff;
     }
 
     body.melodix-ui .fullscreen-buttons #fs-play-pause-btn:hover {
