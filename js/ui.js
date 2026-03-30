@@ -1093,7 +1093,10 @@ export class UIRenderer {
 
         const isRealVideo = track.type === 'video';
         const visualizerContainer = document.getElementById('visualizer-container');
+        const prefersStaticArtwork = document.body.classList.contains('melodix-ui');
+        const shouldUseVisualizer = !isRealVideo && visualizerSettings.isEnabled() && !prefersStaticArtwork;
         overlay.classList.toggle('is-video-mode', isRealVideo);
+        overlay.classList.toggle('static-artwork-mode', !isRealVideo && prefersStaticArtwork);
 
         const toggleUiBtn = document.getElementById('toggle-ui-btn');
         if (toggleUiBtn) {
@@ -1104,6 +1107,8 @@ export class UIRenderer {
             if (sidePanelManager.isActive('lyrics')) {
                 sidePanelManager.close();
             }
+
+            overlay.style.setProperty('--bg-image', 'none');
 
             const fsLikeBtn = document.getElementById('fs-like-btn');
             if (fsLikeBtn) {
@@ -1123,6 +1128,7 @@ export class UIRenderer {
             }
             if (image) image.style.display = 'none';
             if (visualizerContainer) visualizerContainer.style.display = 'none';
+            overlay.classList.remove('visualizer-active');
         } else {
             if (videoContainer) {
                 videoContainer.style.display = 'none';
@@ -1133,7 +1139,10 @@ export class UIRenderer {
                 }
             }
             if (image) image.style.display = 'block';
-            if (visualizerContainer) visualizerContainer.style.display = 'block';
+            if (visualizerContainer) visualizerContainer.style.display = shouldUseVisualizer ? 'block' : 'none';
+            if (!shouldUseVisualizer) {
+                overlay.classList.remove('visualizer-active');
+            }
 
             const qualityBtn = document.getElementById('fs-quality-btn');
             const qualityMenu = document.getElementById('fs-quality-menu');
@@ -1199,6 +1208,8 @@ export class UIRenderer {
         const overlay = document.getElementById('fullscreen-cover-overlay');
         const nextTrackEl = document.getElementById('fullscreen-next-track');
         const lyricsToggleBtn = document.getElementById('toggle-fullscreen-lyrics-btn');
+        const prefersStaticArtwork = document.body.classList.contains('melodix-ui');
+        const shouldUseVisualizer = track.type !== 'video' && visualizerSettings.isEnabled() && !prefersStaticArtwork;
 
         this.updateFullscreenMetadata(track, nextTrack);
 
@@ -1234,6 +1245,12 @@ export class UIRenderer {
         overlay.style.display = 'flex';
 
         const startVisualizer = async () => {
+            if (!shouldUseVisualizer) {
+                if (this.visualizer) this.visualizer.stop();
+                overlay.classList.remove('visualizer-active');
+                return;
+            }
+
             if (!visualizerSettings.isEnabled()) {
                 if (this.visualizer) this.visualizer.stop();
                 return;
@@ -1256,6 +1273,11 @@ export class UIRenderer {
 
         // Setup UI toggle button
         this.setupUIToggleButton(overlay);
+
+        if (!shouldUseVisualizer) {
+            await startVisualizer();
+            return;
+        }
 
         if (localStorage.getItem('epilepsy-warning-dismissed') === 'true') {
             await startVisualizer();

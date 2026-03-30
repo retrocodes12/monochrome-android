@@ -383,6 +383,408 @@ async function uploadCoverImage(file) {
     }
 }
 
+const YOUTUBE_READONLY_SCOPE = 'https://www.googleapis.com/auth/youtube.readonly';
+const YTM_CONNECT_PENDING_KEY = 'monochrome-ytm-connect-pending';
+
+function getYtmGuideElements() {
+    return {
+        connectBtn: document.getElementById('ytm-connect-btn'),
+        importLikedBtn: document.getElementById('ytm-import-liked-btn'),
+        importPlaylistsBtn: document.getElementById('ytm-import-playlists-btn'),
+        statusEl: document.getElementById('ytm-account-status'),
+    };
+}
+
+function getImportProgressElements() {
+    const progressElement = document.getElementById('csv-import-progress');
+    const progressFill = document.getElementById('csv-progress-fill');
+    const progressCurrent = document.getElementById('csv-progress-current');
+    const progressTotal = document.getElementById('csv-progress-total');
+    const currentTrackElement = progressElement?.querySelector('.current-track');
+    const currentArtistElement = progressElement?.querySelector('.current-artist');
+
+    return {
+        progressElement,
+        progressFill,
+        progressCurrent,
+        progressTotal,
+        currentTrackElement,
+        currentArtistElement,
+    };
+}
+
+function resetImportProgress(message = '') {
+    const { progressElement, progressFill, progressCurrent, progressTotal, currentTrackElement, currentArtistElement } =
+        getImportProgressElements();
+    if (!progressElement) return;
+
+    progressElement.style.display = 'none';
+    if (progressFill) progressFill.style.width = '0%';
+    if (progressCurrent) progressCurrent.textContent = '0';
+    if (progressTotal) progressTotal.textContent = '0';
+    if (currentTrackElement) currentTrackElement.textContent = message;
+    if (currentArtistElement) currentArtistElement.textContent = '';
+}
+
+function escapeCsvValue(value) {
+    return `"${String(value || '').replace(/"/g, '""')}"`;
+}
+
+function cleanYouTubeMetadataValue(value) {
+    return (value || '')
+        .replace(/\((official|lyric|lyrics|audio|video|visualizer|sped up|slowed)([^)]*)\)/gi, '')
+        .replace(/\[(official|lyric|lyrics|audio|video|visualizer|sped up|slowed)([^\]]*)\]/gi, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function normalizeYouTubeImportItem(item) {
+    const snippet = item?.snippet || item;
+    const rawTitle = snippet?.title || '';
+
+    if (!rawTitle || rawTitle === 'Private video' || rawTitle === 'Deleted video') {
+        return null;
+    }
+
+    const ownerTitle = snippet?.videoOwnerChannelTitle || snippet?.channelTitle || '';
+    let artist = ownerTitle.replace(/\s*-\s*Topic$/i, '').trim();
+    let title = cleanYouTubeMetadataValue(rawTitle);
+
+    const titleSplit = rawTitle.split(/\s[-–]\s/, 2);
+    if (titleSplit.length === 2) {
+        const [artistGuess, titleGuess] = titleSplit;
+        if (artistGuess && titleGuess && artistGuess.length < 80 && titleGuess.length < 140) {
+            artist = cleanYouTubeMetadataValue(artistGuess);
+            title = cleanYouTubeMetadataValue(titleGuess);
+        }
+    }
+
+    if (!artist) {
+        artist = 'Unknown Artist';
+    }
+
+    if (!title) {
+        return null;
+    }
+
+    return { title, artist };
+}
+
+async function fetchYouTubeApiPage(endpoint, token, params = {}) {
+    const url = new URL(`https://www.googleapis.com/youtube/v3/${endpoint}`);
+    Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+            url.searchParams.set(key, value);
+        }
+    });
+
+    const response = await fetch(url, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        const message = payload.error?.message || `YouTube request failed (${response.status})`;
+        throw new Error(message);
+    }
+
+    return response.json();
+}
+
+async function fetchAllYouTubeApiPages(endpoint, token, params = {}) {
+    const items = [];
+    let pageToken = '';
+
+    do {
+        const page = await fetchYouTubeApiPage(endpoint, token, {
+            ...params,
+            pageToken,
+            maxResults: params.maxResults || '50',
+        });
+        items.push(...(page.items || []));
+        pageToken = page.nextPageToken || '';
+    } while (pageToken);
+
+    return items;
+}
+
+async function upsertYouTubeImportedPlaylist(name, tracks, cover, sourceId) {
+    const sourceTag = `[ytmusic:${sourceId}]`;
+    const description = `Imported from YouTube Music ${sourceTag}`;
+    const existingPlaylists = await db.getPlaylists(true);
+    const existing = existingPlaylists.find((playlist) => playlist.description?.includes(sourceTag));
+
+    if (existing) {
+        existing.name = name;
+        existing.cover = cover || existing.cover || '';
+        existing.description = description;
+        existing.tracks = tracks.map((track) => db._minifyItem(track.type || 'track', { ...track, addedAt: Date.now() }));
+        const updated = await db.updatePlaylist(existing);
+        window.dispatchEvent(new CustomEvent('playlist-tracks-changed'));
+        await syncManager.syncUserPlaylist(updated, 'update');
+        return { playlist: updated, updated: true };
+    }
+
+    const created = await db.createPlaylist(name, tracks, cover || '', description);
+    await syncManager.syncUserPlaylist(created, 'create');
+    return { playlist: created, updated: false };
+}
+
+async function importYouTubeCollectionToMonochrome({
+    sourceName,
+    sourceId,
+    items,
+    cover = '',
+    mode = 'playlist',
+    statusEl = null,
+}) {
+    const normalizedItems = items.map(normalizeYouTubeImportItem).filter(Boolean);
+    if (normalizedItems.length === 0) {
+        throw new Error(`No playable songs were found in ${sourceName}.`);
+    }
+
+    const {
+        progressElement,
+        progressFill,
+        progressCurrent,
+        progressTotal,
+        currentTrackElement,
+        currentArtistElement,
+    } = getImportProgressElements();
+
+    if (progressElement) {
+        progressElement.style.display = 'block';
+        if (progressFill) progressFill.style.width = '0%';
+        if (progressCurrent) progressCurrent.textContent = '0';
+        if (progressTotal) progressTotal.textContent = normalizedItems.length.toString();
+        if (currentTrackElement) currentTrackElement.textContent = `Matching ${sourceName}...`;
+        if (currentArtistElement) currentArtistElement.textContent = '';
+    }
+
+    if (statusEl) {
+        statusEl.textContent = `Matching ${normalizedItems.length} songs from ${sourceName}...`;
+    }
+
+    const csvText = [
+        'Track Name,Artist Name(s)',
+        ...normalizedItems.map((item) => `${escapeCsvValue(item.title)},${escapeCsvValue(item.artist)}`),
+    ].join('\n');
+
+    const result = await parseCSV(
+        csvText,
+        MusicAPI.instance,
+        (progress) => {
+            const percentage = normalizedItems.length > 0 ? (progress.current / normalizedItems.length) * 100 : 0;
+            if (progressFill) progressFill.style.width = `${Math.min(percentage, 100)}%`;
+            if (progressCurrent) progressCurrent.textContent = progress.current.toString();
+            if (currentTrackElement) currentTrackElement.textContent = progress.currentTrack || sourceName;
+            if (currentArtistElement) currentArtistElement.textContent = progress.currentArtist || '';
+        },
+        { strictArtistMatch: true, strictAlbumMatch: false }
+    );
+
+    if (mode === 'likes') {
+        let addedCount = 0;
+
+        for (const track of result.tracks) {
+            const alreadyFavorite = await db.isFavorite('track', track.id);
+            if (!alreadyFavorite) {
+                await db.toggleFavorite('track', track);
+                addedCount++;
+            }
+        }
+
+        return {
+            importedCount: result.tracks.length,
+            addedCount,
+            missingTracks: result.missingTracks,
+        };
+    }
+
+    const playlistResult = await upsertYouTubeImportedPlaylist(sourceName, result.tracks, cover, sourceId);
+    trackImportCSV(sourceName, result.tracks.length, result.missingTracks.length);
+
+    return {
+        importedCount: result.tracks.length,
+        missingTracks: result.missingTracks,
+        playlist: playlistResult.playlist,
+        updated: playlistResult.updated,
+    };
+}
+
+async function refreshYouTubeMusicImportState() {
+    const { connectBtn, importLikedBtn, importPlaylistsBtn, statusEl } = getYtmGuideElements();
+    if (!connectBtn || !importLikedBtn || !importPlaylistsBtn || !statusEl) {
+        return null;
+    }
+
+    const session = await authManager.getGoogleSession();
+    const isConnected = !!session?.providerAccessToken;
+
+    importLikedBtn.disabled = !isConnected;
+    importPlaylistsBtn.disabled = !isConnected;
+    connectBtn.textContent = isConnected ? 'Reconnect Google' : 'Connect Google';
+    statusEl.textContent = isConnected
+        ? 'Google connected. Import your YouTube Music likes or playlists into Monochrome.'
+        : 'Use your Google account to pull YouTube Music playlists and liked songs into Monochrome.';
+
+    if (isConnected && localStorage.getItem(YTM_CONNECT_PENDING_KEY) === '1') {
+        localStorage.removeItem(YTM_CONNECT_PENDING_KEY);
+        showNotification('Google connected. You can import YouTube Music playlists now.');
+    }
+
+    return session;
+}
+
+function initializeYouTubeMusicAccountImport() {
+    const { connectBtn, importLikedBtn, importPlaylistsBtn, statusEl } = getYtmGuideElements();
+    if (!connectBtn || !importLikedBtn || !importPlaylistsBtn || !statusEl) {
+        return;
+    }
+
+    const setBusyState = (isBusy, busyText) => {
+        connectBtn.disabled = isBusy;
+        importLikedBtn.disabled = isBusy;
+        importPlaylistsBtn.disabled = isBusy;
+        if (isBusy) {
+            statusEl.textContent = busyText;
+        }
+    };
+
+    connectBtn.addEventListener('click', async () => {
+        localStorage.setItem(YTM_CONNECT_PENDING_KEY, '1');
+        await authManager.signInWithGoogleWithScopes(
+            [YOUTUBE_READONLY_SCOPE],
+            window.location.origin + '/index.html?oauth=1&ytm=1',
+            window.location.origin + '/login.html'
+        );
+    });
+
+    importLikedBtn.addEventListener('click', async () => {
+        setBusyState(true, 'Fetching liked songs from YouTube Music...');
+
+        try {
+            const session = await authManager.getGoogleSession();
+            const token = session?.providerAccessToken;
+            if (!token) {
+                throw new Error('Connect Google first to import YouTube Music likes.');
+            }
+
+            const likedItems = await fetchAllYouTubeApiPages('videos', token, {
+                part: 'snippet,contentDetails',
+                myRating: 'like',
+            });
+
+            const cover = likedItems[0]?.snippet?.thumbnails?.medium?.url || likedItems[0]?.snippet?.thumbnails?.default?.url || '';
+            const result = await importYouTubeCollectionToMonochrome({
+                sourceName: 'YouTube Music Likes',
+                sourceId: 'likes',
+                items: likedItems,
+                cover,
+                mode: 'likes',
+                statusEl,
+            });
+
+            if (result.missingTracks.length > 0) {
+                showMissingTracksNotification(result.missingTracks, 'YouTube Music Likes');
+            }
+
+            statusEl.textContent = `Imported ${result.importedCount} liked songs (${result.addedCount} new favorites).`;
+            showNotification(`Imported ${result.addedCount} new YouTube Music liked songs.`);
+
+            if (window.location.pathname === '/library') {
+                UIRenderer.instance.renderLibraryPage();
+            }
+        } catch (error) {
+            console.error('YouTube Music likes import failed:', error);
+            statusEl.textContent = error.message;
+            alert(`Failed to import YouTube Music likes: ${error.message}`);
+        } finally {
+            resetImportProgress();
+            await refreshYouTubeMusicImportState();
+        }
+    });
+
+    importPlaylistsBtn.addEventListener('click', async () => {
+        setBusyState(true, 'Fetching your YouTube Music playlists...');
+
+        try {
+            const session = await authManager.getGoogleSession();
+            const token = session?.providerAccessToken;
+            if (!token) {
+                throw new Error('Connect Google first to import YouTube Music playlists.');
+            }
+
+            const playlists = await fetchAllYouTubeApiPages('playlists', token, {
+                part: 'snippet,contentDetails',
+                mine: 'true',
+            });
+
+            if (playlists.length === 0) {
+                throw new Error('No YouTube playlists were found on this Google account.');
+            }
+
+            let playlistCount = 0;
+            let importedTracks = 0;
+
+            for (const playlist of playlists) {
+                const playlistName = playlist?.snippet?.title || 'YouTube Music Playlist';
+                statusEl.textContent = `Fetching ${playlistName}...`;
+
+                const items = await fetchAllYouTubeApiPages('playlistItems', token, {
+                    part: 'snippet,contentDetails',
+                    playlistId: playlist.id,
+                });
+
+                const cover =
+                    playlist?.snippet?.thumbnails?.high?.url ||
+                    playlist?.snippet?.thumbnails?.medium?.url ||
+                    playlist?.snippet?.thumbnails?.default?.url ||
+                    '';
+
+                const result = await importYouTubeCollectionToMonochrome({
+                    sourceName: playlistName,
+                    sourceId: playlist.id,
+                    items,
+                    cover,
+                    mode: 'playlist',
+                    statusEl,
+                });
+
+                importedTracks += result.importedCount;
+                playlistCount++;
+
+                if (result.missingTracks.length > 0) {
+                    showMissingTracksNotification(result.missingTracks, playlistName);
+                }
+            }
+
+            statusEl.textContent = `Imported ${playlistCount} YouTube Music playlists.`;
+            showNotification(`Imported ${playlistCount} YouTube Music playlists and matched ${importedTracks} songs.`);
+
+            if (window.location.pathname === '/library') {
+                UIRenderer.instance.renderLibraryPage();
+            }
+        } catch (error) {
+            console.error('YouTube Music playlist import failed:', error);
+            statusEl.textContent = error.message;
+            alert(`Failed to import YouTube Music playlists: ${error.message}`);
+        } finally {
+            resetImportProgress();
+            await refreshYouTubeMusicImportState();
+        }
+    });
+
+    authManager.onAuthStateChanged(() => {
+        refreshYouTubeMusicImportState();
+    });
+
+    refreshYouTubeMusicImportState();
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     await modernSettings.waitPending();
 
@@ -901,8 +1303,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             spotifyGuide.style.display = 'none';
             appleGuide.style.display = 'none';
             inputContainer.style.display = 'none';
+            refreshYouTubeMusicImportState();
         });
     }
+
+    initializeYouTubeMusicAccountImport();
 
     // Cover image upload functionality
     const coverUploadBtn = document.getElementById('playlist-cover-upload-btn');

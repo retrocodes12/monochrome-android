@@ -46,11 +46,16 @@ export class AuthManager {
     }
 
     async signInWithGoogle() {
+        return this.signInWithGoogleWithScopes();
+    }
+
+    async signInWithGoogleWithScopes(scopes = [], successUrl = null, failureUrl = null) {
         try {
             auth.createOAuth2Session(
                 'google',
-                window.location.origin + '/index.html?oauth=1',
-                window.location.origin + '/login.html'
+                successUrl || window.location.origin + '/index.html?oauth=1',
+                failureUrl || window.location.origin + '/login.html',
+                scopes.length > 0 ? scopes : undefined
             );
         } catch (error) {
             console.error('Login failed:', error);
@@ -152,6 +157,28 @@ export class AuthManager {
         } catch (error) {
             console.error('Logout failed:', error);
             throw error;
+        }
+    }
+
+    async getCurrentSession() {
+        try {
+            return await auth.getSession('current');
+        } catch {
+            return null;
+        }
+    }
+
+    async getGoogleSession() {
+        const currentSession = await this.getCurrentSession();
+        if (currentSession?.provider === 'google') {
+            return currentSession;
+        }
+
+        try {
+            const sessionList = await auth.listSessions();
+            return sessionList.sessions?.find((session) => session.provider === 'google') || null;
+        } catch {
+            return null;
         }
     }
 

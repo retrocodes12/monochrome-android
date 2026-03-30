@@ -139,13 +139,20 @@
                         z-index: 0;
                     "
                 ></div>
+                <div class="fullscreen-top-actions">
+                    <button id="fs-download-btn" class="btn-icon" title="Download">
+                        <use svg="!lucide/download.svg" size="22" />
+                    </button>
+                    <button id="toggle-fullscreen-lyrics-btn" class="fullscreen-lyrics-toggle" title="Toggle Lyrics">
+                        <use svg="!lucide/mic-vocal.svg" size="22" />
+                    </button>
+                    <button id="close-fullscreen-cover-btn" title="Close" aria-label="Close">
+                        <use svg="!lucide/x.svg" size="22" />
+                    </button>
+                </div>
                 <button id="toggle-ui-btn" class="fullscreen-ui-toggle" title="Toggle UI">
                     <use svg="!lucide/x.svg" size="24" />
                 </button>
-                <button id="toggle-fullscreen-lyrics-btn" class="fullscreen-lyrics-toggle" title="Toggle Lyrics">
-                    <use svg="!lucide/mic-vocal.svg" size="24" />
-                </button>
-                <button id="close-fullscreen-cover-btn" title="Close">&times;</button>
                 <div class="fullscreen-main-view">
                     <img
                         id="fullscreen-cover-image"
@@ -162,9 +169,6 @@
                             </button>
                             <button id="fs-add-playlist-btn" class="btn-icon" title="Add to Playlist">
                                 <use svg="!lucide/square-pen.svg" size="24" />
-                            </button>
-                            <button id="fs-download-btn" class="btn-icon" title="Download">
-                                <use svg="!lucide/download.svg" size="24" />
                             </button>
                             <button id="fs-cast-btn" class="btn-icon" title="Cast">
                                 <use svg="!lucide/cast.svg" size="24" />
@@ -432,7 +436,10 @@
                         </div>
 
                         <div id="csv-ytm-guide" style="display: none; margin-bottom: 1rem">
-                            <p style="font-size: 0.8rem; margin: 0 0 0.5rem 0">Paste a YouTube Music Playlist URL.</p>
+                            <p style="font-size: 0.8rem; margin: 0 0 0.5rem 0">
+                                Paste a YouTube Music playlist URL, or connect Google to import your playlists and
+                                liked songs.
+                            </p>
                             <input
                                 type="text"
                                 id="ytm-url-input"
@@ -441,6 +448,21 @@
                                 style="width: 100%; margin-bottom: 0.5rem"
                             />
                             <p id="ytm-status" style="font-size: 0.8rem; margin: 0; opacity: 0.7"></p>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem">
+                                <button type="button" id="ytm-connect-btn" class="btn-secondary">
+                                    Connect Google
+                                </button>
+                                <button type="button" id="ytm-import-liked-btn" class="btn-secondary" disabled>
+                                    Import Likes
+                                </button>
+                                <button type="button" id="ytm-import-playlists-btn" class="btn-secondary" disabled>
+                                    Import Playlists
+                                </button>
+                            </div>
+                            <p id="ytm-account-status" style="font-size: 0.78rem; margin: 0.65rem 0 0; opacity: 0.7">
+                                Use your Google account to pull YouTube Music playlists and liked songs into
+                                Monochrome.
+                            </p>
                         </div>
 
                         <div id="csv-input-container" style="display: none">
