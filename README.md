@@ -131,6 +131,23 @@ npm run android:release
 
 The Gradle project lives in [`android/`](android) and expects a working Android SDK installation.
 
+### iOS Build
+
+This repo also includes a Capacitor iOS wrapper for the web app.
+
+```bash
+npm install
+npm run ios:sync
+```
+
+To produce an iOS archive, use:
+
+```bash
+npm run ios:build
+```
+
+The Xcode project lives in [`ios/`](ios) and requires macOS with Xcode and `xcodebuild` available.
+
 ---
 
 ## Self-Hosting

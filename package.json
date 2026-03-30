@@ -11,6 +11,8 @@
         "android:sync": "npx cap sync android",
         "android:debug": "npm run build && npm run android:sync && cd android && ./gradlew assembleDebug",
         "android:release": "npm run build && npm run android:sync && cd android && ./gradlew assembleRelease bundleRelease",
+        "ios:sync": "npm run build && node node_modules/@capacitor/cli/bin/capacitor sync ios",
+        "ios:build": "npm run build && node node_modules/@capacitor/cli/bin/capacitor sync ios && node node_modules/@capacitor/cli/bin/capacitor build ios",
         "lint:js": "eslint .",
         "lint:css": "stylelint \"**/*.css\"",
         "lint:html": "htmlhint \"**/*.html\" --ignore=\"dist/**,legacy/**,node_modules/**\"",
